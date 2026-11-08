@@ -7,6 +7,7 @@ file is the `.asc` next to it. The catalog itself is signed by CI (see .github/w
 import json
 import subprocess
 import sys
+import time
 import tomllib
 from xml.sax.saxutils import escape, quoteattr
 
@@ -68,8 +69,12 @@ def main():
     with open(sys.argv[1] if len(sys.argv) > 1 else f"{HERE}/packages.toml", "rb") as f:
         packages = tomllib.load(f)["package"]
     body = "\n".join(entry(p) for p in packages)
+    # Freshness for the store: the serial only goes up (rollback), the catalog goes stale after 21 days (freeze).
+    # CI regenerates and signs every week, so a mirror that keeps serving an old copy is refused after three weeks.
+    serial = int(time.time())
+    expires = serial + 21 * 24 * 3600
     with open(f"{HERE}/catalog.xml", "w") as f:
-        f.write(f'<?xml version="1.0" encoding="UTF-8"?>\n<components version="1.0" origin="freesynergy">\n{body}\n</components>\n')
+        f.write(f'<?xml version="1.0" encoding="UTF-8"?>\n<components version="1.0" origin="freesynergy" fs-serial="{serial}" fs-expires="{expires}">\n{body}\n</components>\n')
 
 
 if __name__ == "__main__":

@@ -1,18 +1,27 @@
-# Signs catalog.xml with the project's signing subkey and commits catalog.xml.asc.
+# Generates catalog.xml from packages.toml and the public releases, signs it with the project's signing subkey and
+# commits catalog.xml and catalog.xml.asc together (one commit: clients never see a catalog without its signature).
+# Runs when the package list changes, every Monday (the catalog expires after 21 days), and by hand.
 # Needs the secrets GPG_PRIVATE_KEY and GPG_PASSPHRASE (scripts/set-signing-secrets.sh in fs-release).
 name: sign
 on:
   push:
     branches: [main]
-    paths: [catalog.xml]
+    paths: [packages.toml, scripts/gen_catalog.py]
+  schedule:
+    - cron: "17 4 * * 1"
   workflow_dispatch:
 permissions:
   contents: write
+concurrency: sign
 jobs:
   sign:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Generate
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 scripts/gen_catalog.py
       - name: Sign
         env:
           GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
@@ -24,10 +33,10 @@ jobs:
           rm -f catalog.xml.asc
           gpg --batch --pinentry-mode loopback --passphrase "$GPG_PASSPHRASE" --armor --detach-sign -o catalog.xml.asc catalog.xml
           gpg --batch --verify catalog.xml.asc catalog.xml
-      - name: Commit signature
+      - name: Commit catalog and signature together
         run: |
           git config user.name "FreeSynergy Release"
           git config user.email "support@freesynergy.net"
-          git add catalog.xml.asc
-          git diff --cached --quiet || git commit -m "chore: sign catalog.xml"
+          git add catalog.xml catalog.xml.asc
+          git commit -m "chore: refresh and sign catalog.xml"
           git push
