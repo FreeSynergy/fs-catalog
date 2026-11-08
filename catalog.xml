@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<components version="1.0" origin="freesynergy">
+  <component type="desktop-application">
+    <id>fs-store</id>
+    <name>FreeSynergy.Store</name>
+    <summary>Install, update and extend FreeSynergy programs</summary>
+    <releases>
+      <release version="0.1.0-rc.5">
+        <artifacts>
+          <artifact type="binary" platform="x86_64-linux-gnu">
+            <location>https://github.com/FreeSynergy/fs-store/releases/download/v0.1.0-rc.5/fs-store-0.1.0-rc.5-linux-x86_64.tar.gz</location>
+            <checksum type="sha256">c82e2df42cbf9490ba57ef83fe6b803f47a7cd5b5d31f91468ab49c02958bef2</checksum>
+          </artifact>
+        </artifacts>
+      </release>
+    </releases>
+    <custom>
+      <value key="fs:kind">program</value>
+      <value key="fs:format">tar.gz</value>
+      <value key="fs:signature">https://github.com/FreeSynergy/fs-store/releases/download/v0.1.0-rc.5/fs-store-0.1.0-rc.5-linux-x86_64.tar.gz.asc</value>
+    </custom>
+  </component>
+  <component type="desktop-application">
+    <id>fs-people</id>
+    <name>FreeSynergy.People</name>
+    <summary>People and contacts</summary>
+    <releases>
+      <release version="0.6.1-rc.2">
+        <artifacts>
+          <artifact type="binary" platform="x86_64-linux-gnu">
+            <location>https://github.com/FreeSynergy/fs-people/releases/download/v0.6.1-rc.2/fs-people-0.6.1-rc.2-linux-x86_64.tar.gz</location>
+            <checksum type="sha256">f8bcde7af18765ad4c609154a8559e1b814fe4e6819d2b74a4d39183719296db</checksum>
+          </artifact>
+        </artifacts>
+      </release>
+    </releases>
+    <custom>
+      <value key="fs:kind">program</value>
+      <value key="fs:format">tar.gz</value>
+      <value key="fs:signature">https://github.com/FreeSynergy/fs-people/releases/download/v0.6.1-rc.2/fs-people-0.6.1-rc.2-linux-x86_64.tar.gz.asc</value>
+    </custom>
+  </component>
+</components>

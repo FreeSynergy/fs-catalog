@@ -65,7 +65,7 @@ def entry(p):
 
 
 def main():
-    with open(f"{HERE}/packages.toml", "rb") as f:
+    with open(sys.argv[1] if len(sys.argv) > 1 else f"{HERE}/packages.toml", "rb") as f:
         packages = tomllib.load(f)["package"]
     body = "\n".join(entry(p) for p in packages)
     with open(f"{HERE}/catalog.xml", "w") as f:
