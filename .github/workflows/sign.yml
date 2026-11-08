@@ -21,6 +21,7 @@ jobs:
           set -euo pipefail
           export GNUPGHOME="$(mktemp -d)"
           printf '%s' "$GPG_PRIVATE_KEY" | gpg --batch --import
+          rm -f catalog.xml.asc
           gpg --batch --pinentry-mode loopback --passphrase "$GPG_PASSPHRASE" --armor --detach-sign -o catalog.xml.asc catalog.xml
           gpg --batch --verify catalog.xml.asc catalog.xml
       - name: Commit signature
