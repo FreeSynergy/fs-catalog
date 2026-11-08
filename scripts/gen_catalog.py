@@ -4,6 +4,7 @@
 Pattern: Builder. No network except `gh api`; sha256 comes from the release's SHA256SUMS.txt, the signature of each
 file is the `.asc` next to it. The catalog itself is signed by CI (see .github/workflows/sign.yml), never here.
 """
+import hashlib
 import json
 import subprocess
 import sys
@@ -43,6 +44,11 @@ def entry(p):
     if sha is None:
         sys.exit(f"{wanted}: not in SHA256SUMS.txt")
     q = quoteattr
+    # optional PNG icon: `icon = "https://..."` in packages.toml; its SHA-256 goes into the signed catalog
+    icon_line = ""
+    if p.get("icon"):
+        data = subprocess.run(["curl", "-fsSL", p["icon"]], check=True, capture_output=True).stdout
+        icon_line = f"\n    <icon type=\"remote\" fs-sha256=\"{hashlib.sha256(data).hexdigest()}\">{escape(p['icon'])}</icon>"
     # every rpm of the release for this machine (x86_64), each with its own signature: the store uses them
     # when it was installed by rpm itself
     rpm_lines = ""
@@ -59,7 +65,7 @@ def entry(p):
     return f"""  <component type="desktop-application">
     <id>{escape(p['id'])}</id>
     <name>{escape(p['name'])}</name>
-    <summary>{escape(p['summary'])}</summary>
+    <summary>{escape(p['summary'])}</summary>{icon_line}
     <releases>
       <release version={q(version)}>
         <artifacts>
