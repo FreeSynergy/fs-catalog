@@ -21,6 +21,26 @@
     </custom>
   </component>
   <component type="desktop-application">
+    <id>fs-tasks</id>
+    <name>FreeSynergy.Tasks</name>
+    <summary>Tasks and Kanban</summary>
+    <releases>
+      <release version="0.8.2-rc.2">
+        <artifacts>
+          <artifact type="binary" platform="x86_64-linux-gnu">
+            <location>https://github.com/FreeSynergy/fs-tasks/releases/download/v0.8.2-rc.2/fs-tasks-0.8.2-rc.2-linux-x86_64.tar.gz</location>
+            <checksum type="sha256">bdd12f18c23e1b5327bd8eba25cbec9e5222d092ba1cbb1a5fe0749d63ffa9d9</checksum>
+          </artifact>
+        </artifacts>
+      </release>
+    </releases>
+    <custom>
+      <value key="fs:kind">program</value>
+      <value key="fs:format">tar.gz</value>
+      <value key="fs:signature">https://github.com/FreeSynergy/fs-tasks/releases/download/v0.8.2-rc.2/fs-tasks-0.8.2-rc.2-linux-x86_64.tar.gz.asc</value>
+    </custom>
+  </component>
+  <component type="desktop-application">
     <id>fs-people</id>
     <name>FreeSynergy.People</name>
     <summary>People and contacts</summary>
