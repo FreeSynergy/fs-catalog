@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<components version="1.0" origin="freesynergy" fs-serial="1794109883" fs-expires="1795924283">
+<components version="1.0" origin="freesynergy" fs-serial="1794111100" fs-expires="1795925500">
   <component type="desktop-application">
     <id>fs-store</id>
     <name>FreeSynergy.Store</name>
     <summary>Install, update and extend FreeSynergy programs</summary>
     <releases>
-      <release version="0.1.0-rc.6">
+      <release version="0.1.0-rc.9">
         <artifacts>
           <artifact type="binary" platform="x86_64-linux-gnu">
-            <location>https://github.com/FreeSynergy/fs-store/releases/download/v0.1.0-rc.6/fs-store-0.1.0-rc.6-linux-x86_64.tar.gz</location>
-            <checksum type="sha256">b397ff3094f67d407a3d7347fff4df8fbd27f61298736f380fd55cb5aaa2be27</checksum>
+            <location>https://github.com/FreeSynergy/fs-store/releases/download/v0.1.0-rc.9/fs-store-0.1.0-rc.9-linux-x86_64.tar.gz</location>
+            <checksum type="sha256">dc8c682e45cefef26c1318c54a72133cc4a8dab2eef56dc81515ac59670e049b</checksum>
           </artifact>
-          <artifact type="binary" platform="x86_64-linux-gnu" fs-format="rpm" fs-signature="https://github.com/FreeSynergy/fs-store/releases/download/v0.1.0-rc.6/fs-store-0.1.0-rc.6-1.x86_64.rpm.asc">
-            <location>https://github.com/FreeSynergy/fs-store/releases/download/v0.1.0-rc.6/fs-store-0.1.0-rc.6-1.x86_64.rpm</location>
-            <checksum type="sha256">bb098fff8e41d6d523a187b439dd09b05b1b81dfd10670fa52dd542c352460b4</checksum>
+          <artifact type="binary" platform="x86_64-linux-gnu" fs-format="rpm" fs-signature="https://github.com/FreeSynergy/fs-store/releases/download/v0.1.0-rc.9/fs-store-0.1.0-rc.9-1.x86_64.rpm.asc">
+            <location>https://github.com/FreeSynergy/fs-store/releases/download/v0.1.0-rc.9/fs-store-0.1.0-rc.9-1.x86_64.rpm</location>
+            <checksum type="sha256">2328689bae7285758fce97d54ad9b21a2ad89c2171d335e147d2141c12509b03</checksum>
           </artifact>
         </artifacts>
       </release>
@@ -21,7 +21,7 @@
     <custom>
       <value key="fs:kind">program</value>
       <value key="fs:format">tar.gz</value>
-      <value key="fs:signature">https://github.com/FreeSynergy/fs-store/releases/download/v0.1.0-rc.6/fs-store-0.1.0-rc.6-linux-x86_64.tar.gz.asc</value>
+      <value key="fs:signature">https://github.com/FreeSynergy/fs-store/releases/download/v0.1.0-rc.9/fs-store-0.1.0-rc.9-linux-x86_64.tar.gz.asc</value>
     </custom>
   </component>
   <component type="desktop-application">
