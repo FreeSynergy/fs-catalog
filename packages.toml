@@ -3,10 +3,28 @@
 # Provisional (ADR 0062): later each version is also a Git tag in a package repo.
 
 [[package]]
-id = "net.freesynergy.store"
+id = "fs-store"
 name = "FreeSynergy.Store"
 summary = "Install, update and extend FreeSynergy programs"
 repo = "FreeSynergy/fs-store"
-tag = "v0.1.0-rc.1"
+tag = "v0.1.0-rc.5"
 asset = "fs-store-{version}-linux-x86_64.tar.gz"
+kind = "program"
+
+[[package]]
+id = "fs-tasks"
+name = "FreeSynergy.Tasks"
+summary = "Tasks and Kanban"
+repo = "FreeSynergy/fs-tasks"
+tag = "v0.8.2-rc.2"
+asset = "fs-tasks-{version}-linux-x86_64.tar.gz"
+kind = "program"
+
+[[package]]
+id = "fs-people"
+name = "FreeSynergy.People"
+summary = "People and contacts"
+repo = "FreeSynergy/fs-people"
+tag = "v0.6.1-rc.2"
+asset = "fs-people-{version}-linux-x86_64.tar.gz"
 kind = "program"
