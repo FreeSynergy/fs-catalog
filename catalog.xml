@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<components version="1.0" origin="freesynergy" fs-serial="1794149715" fs-expires="1795964115">
+<components version="1.0" origin="freesynergy" fs-serial="1794150830" fs-expires="1795965230">
   <component type="desktop-application">
     <id>fs-store</id>
     <name>FreeSynergy.Store</name>
@@ -76,6 +76,32 @@
       <value key="fs:kind">program</value>
       <value key="fs:format">tar.gz</value>
       <value key="fs:signature">https://github.com/FreeSynergy/fs-people/releases/download/v0.0.3/fs-people-0.0.3-linux-x86_64.tar.gz.asc</value>
+    </custom>
+  </component>
+  <component type="desktop-application">
+    <id>fs-calendar</id>
+    <name>FreeSynergy.Calendar</name>
+    <summary>Calendar and events</summary>
+    <description><p>Plan your days: events with times and zones, repeating events, a month, week and day view, and import and export as iCalendar. Your events stay in your own data folder.</p></description>
+    <url type="homepage">https://github.com/FreeSynergy/fs-calendar</url>
+    <releases>
+      <release version="0.0.2">
+        <artifacts>
+          <artifact type="binary" platform="x86_64-linux-gnu">
+            <location>https://github.com/FreeSynergy/fs-calendar/releases/download/v0.0.2/fs-calendar-0.0.2-linux-x86_64.tar.gz</location>
+            <checksum type="sha256">3575dfec5afb1d01d426fb417005a489ec30e798f5e6a601cc76dd3ad3e2f95c</checksum>
+          </artifact>
+          <artifact type="binary" platform="x86_64-linux-gnu" fs-format="rpm" fs-signature="https://github.com/FreeSynergy/fs-calendar/releases/download/v0.0.2/fs-calendar-0.0.2-1.x86_64.rpm.asc">
+            <location>https://github.com/FreeSynergy/fs-calendar/releases/download/v0.0.2/fs-calendar-0.0.2-1.x86_64.rpm</location>
+            <checksum type="sha256">3b0835a80a722b3087c8942d99d893c4e61199befff044e1e89595a58daf2a88</checksum>
+          </artifact>
+        </artifacts>
+      </release>
+    </releases>
+    <custom>
+      <value key="fs:kind">program</value>
+      <value key="fs:format">tar.gz</value>
+      <value key="fs:signature">https://github.com/FreeSynergy/fs-calendar/releases/download/v0.0.2/fs-calendar-0.0.2-linux-x86_64.tar.gz.asc</value>
     </custom>
   </component>
 </components>
