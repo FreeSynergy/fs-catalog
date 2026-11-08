@@ -1,0 +1,12 @@
+# The packages this catalog offers. One table per package; `tag` is the release tag in `repo`.
+# `python3 scripts/gen_catalog.py` reads the public release and writes catalog.xml.
+# Provisional (ADR 0062): later each version is also a Git tag in a package repo.
+
+[[package]]
+id = "net.freesynergy.store"
+name = "FreeSynergy.Store"
+summary = "Install, update and extend FreeSynergy programs"
+repo = "FreeSynergy/fs-store"
+tag = "v0.1.0-rc.1"
+asset = "fs-store-{version}-linux-x86_64.tar.gz"
+kind = "program"

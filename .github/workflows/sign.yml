@@ -1,0 +1,32 @@
+# Signs catalog.xml with the project's signing subkey and commits catalog.xml.asc.
+# Needs the secrets GPG_PRIVATE_KEY and GPG_PASSPHRASE (scripts/set-signing-secrets.sh in fs-release).
+name: sign
+on:
+  push:
+    branches: [main]
+    paths: [catalog.xml]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  sign:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Sign
+        env:
+          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+        run: |
+          set -euo pipefail
+          export GNUPGHOME="$(mktemp -d)"
+          printf '%s' "$GPG_PRIVATE_KEY" | gpg --batch --import
+          gpg --batch --pinentry-mode loopback --passphrase "$GPG_PASSPHRASE" --armor --detach-sign -o catalog.xml.asc catalog.xml
+          gpg --batch --verify catalog.xml.asc catalog.xml
+      - name: Commit signature
+        run: |
+          git config user.name "FreeSynergy Release"
+          git config user.email "support@freesynergy.net"
+          git add catalog.xml.asc
+          git diff --cached --quiet || git commit -m "chore: sign catalog.xml"
+          git push
