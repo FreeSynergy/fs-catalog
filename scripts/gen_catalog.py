@@ -44,6 +44,7 @@ def entry(p):
     if sha is None:
         sys.exit(f"{wanted}: not in SHA256SUMS.txt")
     q = quoteattr
+    description_line = f"\n    <description><p>{escape(p['description'])}</p></description>" if p.get('description') else ""
     # optional PNG icon: `icon = "https://..."` in packages.toml; its SHA-256 goes into the signed catalog
     icon_line = ""
     if p.get("icon"):
@@ -65,7 +66,8 @@ def entry(p):
     return f"""  <component type="desktop-application">
     <id>{escape(p['id'])}</id>
     <name>{escape(p['name'])}</name>
-    <summary>{escape(p['summary'])}</summary>{icon_line}
+    <summary>{escape(p['summary'])}</summary>{description_line}
+    <url type="homepage">https://github.com/{escape(p['repo'])}</url>{icon_line}
     <releases>
       <release version={q(version)}>
         <artifacts>
