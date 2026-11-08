@@ -43,6 +43,19 @@ def entry(p):
     if sha is None:
         sys.exit(f"{wanted}: not in SHA256SUMS.txt")
     q = quoteattr
+    # every rpm of the release for this machine (x86_64), each with its own signature: the store uses them
+    # when it was installed by rpm itself
+    rpm_lines = ""
+    sha_by_name = sums(release)
+    for a in sorted(release["assets"], key=lambda a: a["name"]):
+        n = a["name"]
+        if n.endswith(".x86_64.rpm") and (n + ".asc") in {x["name"] for x in release["assets"]} and n in sha_by_name:
+            sig_url = next(x["browser_download_url"] for x in release["assets"] if x["name"] == n + ".asc")
+            rpm_lines += f"""
+          <artifact type="binary" platform="x86_64-linux-gnu" fs-format="rpm" fs-signature={q(sig_url)}>
+            <location>{escape(a['browser_download_url'])}</location>
+            <checksum type="sha256">{sha_by_name[n]}</checksum>
+          </artifact>"""
     return f"""  <component type="desktop-application">
     <id>{escape(p['id'])}</id>
     <name>{escape(p['name'])}</name>
@@ -53,7 +66,7 @@ def entry(p):
           <artifact type="binary" platform="x86_64-linux-gnu">
             <location>{escape(asset['browser_download_url'])}</location>
             <checksum type="sha256">{sha}</checksum>
-          </artifact>
+          </artifact>{rpm_lines}
         </artifacts>
       </release>
     </releases>
