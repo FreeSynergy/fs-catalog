@@ -31,3 +31,13 @@ repo = "FreeSynergy/fs-people"
 tag = "v0.0.3"
 asset = "fs-people-{version}-linux-x86_64.tar.gz"
 kind = "program"
+
+[[package]]
+id = "fs-calendar"
+name = "FreeSynergy.Calendar"
+summary = "Calendar and events"
+description = "Plan your days: events with times and zones, repeating events, a month, week and day view, and import and export as iCalendar. Your events stay in your own data folder."
+repo = "FreeSynergy/fs-calendar"
+tag = "v0.0.2"
+asset = "fs-calendar-{version}-linux-x86_64.tar.gz"
+kind = "program"
