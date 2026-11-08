@@ -8,7 +8,7 @@ name = "FreeSynergy.Store"
 summary = "Install, update and extend FreeSynergy programs"
 description = "The store of FreeSynergy: it installs the programs you choose from signed catalogs, keeps them up to date, and takes them away again. Every file is checked against the project key before anything is installed, and a failed update is rolled back."
 repo = "FreeSynergy/fs-store"
-tag = "v0.0.3"
+tag = "v0.0.6"
 asset = "fs-store-{version}-linux-x86_64.tar.gz"
 kind = "program"
 
