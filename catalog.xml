@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<components version="1.0" origin="freesynergy" fs-serial="1794111945" fs-expires="1795926345">
+<components version="1.0" origin="freesynergy" fs-serial="1794112423" fs-expires="1795926823">
   <component type="desktop-application">
     <id>fs-store</id>
     <name>FreeSynergy.Store</name>
@@ -53,19 +53,15 @@
     <name>FreeSynergy.People</name>
     <summary>People and contacts</summary>
     <releases>
-      <release version="0.6.1-rc.2">
+      <release version="0.6.1-rc.4">
         <artifacts>
           <artifact type="binary" platform="x86_64-linux-gnu">
-            <location>https://github.com/FreeSynergy/fs-people/releases/download/v0.6.1-rc.2/fs-people-0.6.1-rc.2-linux-x86_64.tar.gz</location>
-            <checksum type="sha256">f8bcde7af18765ad4c609154a8559e1b814fe4e6819d2b74a4d39183719296db</checksum>
+            <location>https://github.com/FreeSynergy/fs-people/releases/download/v0.6.1-rc.4/fs-people-0.6.1-rc.4-linux-x86_64.tar.gz</location>
+            <checksum type="sha256">c289feeccd93a575716b7155979204c1efc97eb3b1cd58b2d69d13be137b6f46</checksum>
           </artifact>
-          <artifact type="binary" platform="x86_64-linux-gnu" fs-format="rpm" fs-signature="https://github.com/FreeSynergy/fs-people/releases/download/v0.6.1-rc.2/fs-people-app-0.6.1-rc.2-1.x86_64.rpm.asc">
-            <location>https://github.com/FreeSynergy/fs-people/releases/download/v0.6.1-rc.2/fs-people-app-0.6.1-rc.2-1.x86_64.rpm</location>
-            <checksum type="sha256">5a620c8ef68da756850897f818c87eeb4ef3a70add581358daf578c409f99c97</checksum>
-          </artifact>
-          <artifact type="binary" platform="x86_64-linux-gnu" fs-format="rpm" fs-signature="https://github.com/FreeSynergy/fs-people/releases/download/v0.6.1-rc.2/fs-people-server-0.6.1-rc.2-1.x86_64.rpm.asc">
-            <location>https://github.com/FreeSynergy/fs-people/releases/download/v0.6.1-rc.2/fs-people-server-0.6.1-rc.2-1.x86_64.rpm</location>
-            <checksum type="sha256">f1b9fdc17c6e4d0d16010a035a8805d633bdf2863aa1d2ada366eb95f6e10719</checksum>
+          <artifact type="binary" platform="x86_64-linux-gnu" fs-format="rpm" fs-signature="https://github.com/FreeSynergy/fs-people/releases/download/v0.6.1-rc.4/fs-people-0.6.1-rc.4-1.x86_64.rpm.asc">
+            <location>https://github.com/FreeSynergy/fs-people/releases/download/v0.6.1-rc.4/fs-people-0.6.1-rc.4-1.x86_64.rpm</location>
+            <checksum type="sha256">1174a7c26353525943d1731afcedd5ed9c16e8d397b2f0043417a30fddeaedb2</checksum>
           </artifact>
         </artifacts>
       </release>
@@ -73,7 +69,7 @@
     <custom>
       <value key="fs:kind">program</value>
       <value key="fs:format">tar.gz</value>
-      <value key="fs:signature">https://github.com/FreeSynergy/fs-people/releases/download/v0.6.1-rc.2/fs-people-0.6.1-rc.2-linux-x86_64.tar.gz.asc</value>
+      <value key="fs:signature">https://github.com/FreeSynergy/fs-people/releases/download/v0.6.1-rc.4/fs-people-0.6.1-rc.4-linux-x86_64.tar.gz.asc</value>
     </custom>
   </component>
 </components>
