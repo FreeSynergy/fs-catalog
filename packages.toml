@@ -41,3 +41,23 @@ repo = "FreeSynergy/fs-calendar"
 tag = "v0.0.2"
 asset = "fs-calendar-{version}-linux-x86_64.tar.gz"
 kind = "program"
+
+[[package]]
+id = "fs-files"
+name = "FreeSynergy.Files"
+summary = "Files and folders"
+description = "Your files in one place: folders and file lists with names, sizes and dates. A first version: no preview, no upload and no download yet."
+repo = "FreeSynergy/fs-files"
+tag = "v0.0.2"
+asset = "fs-files-{version}-linux-x86_64.tar.gz"
+kind = "program"
+
+[[package]]
+id = "fs-maps"
+name = "FreeSynergy.Maps"
+summary = "Places and maps"
+description = "Your places as lists and sheets. A first version: there is no map view yet, only the lists and the sheet of each place."
+repo = "FreeSynergy/fs-maps"
+tag = "v0.0.2"
+asset = "fs-maps-{version}-linux-x86_64.tar.gz"
+kind = "program"
