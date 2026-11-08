@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<components version="1.0" origin="freesynergy" fs-serial="1794135371" fs-expires="1795949771">
+<components version="1.0" origin="freesynergy" fs-serial="1794142446" fs-expires="1795956846">
   <component type="desktop-application">
     <id>fs-store</id>
     <name>FreeSynergy.Store</name>
     <summary>Install, update and extend FreeSynergy programs</summary>
+    <description><p>The store of FreeSynergy: it installs the programs you choose from signed catalogs, keeps them up to date, and takes them away again. Every file is checked against the project key before anything is installed, and a failed update is rolled back.</p></description>
+    <url type="homepage">https://github.com/FreeSynergy/fs-store</url>
     <releases>
       <release version="0.0.1">
         <artifacts>
@@ -28,6 +30,8 @@
     <id>fs-tasks</id>
     <name>FreeSynergy.Tasks</name>
     <summary>Tasks and Kanban</summary>
+    <description><p>Plan what has to be done: lists, status and Kanban views, due dates, relations between tasks, and import and export as iCalendar. Your tasks stay in your own data folder.</p></description>
+    <url type="homepage">https://github.com/FreeSynergy/fs-tasks</url>
     <releases>
       <release version="0.0.1">
         <artifacts>
@@ -52,6 +56,8 @@
     <id>fs-people</id>
     <name>FreeSynergy.People</name>
     <summary>People and contacts</summary>
+    <description><p>Your people and contacts: cards with names, mail, phone and notes, groups of people, and vCard import and export. Everything stays in your own data folder.</p></description>
+    <url type="homepage">https://github.com/FreeSynergy/fs-people</url>
     <releases>
       <release version="0.0.1">
         <artifacts>
