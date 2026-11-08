@@ -16,7 +16,7 @@ id = "fs-tasks"
 name = "FreeSynergy.Tasks"
 summary = "Tasks and Kanban"
 repo = "FreeSynergy/fs-tasks"
-tag = "v0.8.2-rc.2"
+tag = "v0.9.3-rc.1"
 asset = "fs-tasks-{version}-linux-x86_64.tar.gz"
 kind = "program"
 
