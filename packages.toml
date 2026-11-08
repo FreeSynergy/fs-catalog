@@ -1,13 +1,13 @@
 # The packages this catalog offers. One table per package; `tag` is the release tag in `repo`.
-# `python3 scripts/gen_catalog.py` reads the public release and writes catalog.xml.
-# Provisional (ADR 0062): later each version is also a Git tag in a package repo.
+# `python3 scripts/gen_catalog.py` reads the public release and writes catalog.xml; CI does it and signs (sign.yml).
+# Versions count 0.0.N (ADR 0064).
 
 [[package]]
 id = "fs-store"
 name = "FreeSynergy.Store"
 summary = "Install, update and extend FreeSynergy programs"
 repo = "FreeSynergy/fs-store"
-tag = "v0.1.0-rc.9"
+tag = "v0.0.1"
 asset = "fs-store-{version}-linux-x86_64.tar.gz"
 kind = "program"
 
@@ -16,7 +16,7 @@ id = "fs-tasks"
 name = "FreeSynergy.Tasks"
 summary = "Tasks and Kanban"
 repo = "FreeSynergy/fs-tasks"
-tag = "v0.9.3-rc.1"
+tag = "v0.0.1"
 asset = "fs-tasks-{version}-linux-x86_64.tar.gz"
 kind = "program"
 
@@ -25,6 +25,6 @@ id = "fs-people"
 name = "FreeSynergy.People"
 summary = "People and contacts"
 repo = "FreeSynergy/fs-people"
-tag = "v0.6.1-rc.4"
+tag = "v0.0.1"
 asset = "fs-people-{version}-linux-x86_64.tar.gz"
 kind = "program"
