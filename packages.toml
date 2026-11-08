@@ -7,7 +7,7 @@ id = "fs-store"
 name = "FreeSynergy.Store"
 summary = "Install, update and extend FreeSynergy programs"
 repo = "FreeSynergy/fs-store"
-tag = "v0.1.0-rc.5"
+tag = "v0.1.0-rc.6"
 asset = "fs-store-{version}-linux-x86_64.tar.gz"
 kind = "program"
 
