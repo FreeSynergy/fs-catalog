@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<components version="1.0" origin="freesynergy" fs-serial="1794155830" fs-expires="1795970230">
+<components version="1.0" origin="freesynergy" fs-serial="1794228718" fs-expires="1796043118">
   <component type="desktop-application">
     <id>fs-store</id>
     <name>FreeSynergy.Store</name>
