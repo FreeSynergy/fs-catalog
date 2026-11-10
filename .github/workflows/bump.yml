@@ -1,0 +1,41 @@
+# Pull, not push: every 15 minutes look at the public releases of the programs in packages.toml; when a newer, published and
+# COMPLETE Pre-release exists (SHA256SUMS.txt, packages and every .asc), raise its tag, commit and start `sign`.
+# Only this repo's own GITHUB_TOKEN is used - no secret, nothing cross-repo. No change = no commit = no sign run, so there
+# is no loop: sign.yml only commits catalog.xml/.asc, which this workflow never watches.
+# A push made with GITHUB_TOKEN starts no workflow, so `sign` is started explicitly (workflow_dispatch is the exception).
+name: bump
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: write
+concurrency: bump
+jobs:
+  bump:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Raise tags to the newest complete releases
+        id: bump
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 -I scripts/bump_catalog.py
+          if git diff --quiet -- packages.toml; then echo "changed=false" >> "$GITHUB_OUTPUT"; else echo "changed=true" >> "$GITHUB_OUTPUT"; fi
+      - name: Commit, push and start sign
+        if: steps.bump.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          git config user.name "FreeSynergy Release"
+          git config user.email "support@freesynergy.net"
+          msg=$(git diff -U0 packages.toml | grep '^+tag' | wc -l)
+          git commit -m "catalog: raise ${msg} package tag(s) to the newest complete release" packages.toml
+          for i in 1 2 3; do
+            git push && break
+            git pull --rebase --autostash
+          done
+          gh workflow run sign.yml --ref main
