@@ -61,3 +61,13 @@ repo = "FreeSynergy/fs-maps"
 tag = "v0.0.2"
 asset = "fs-maps-{version}-linux-x86_64.tar.gz"
 kind = "program"
+
+[[package]]
+id = "fs-wiki"
+name = "FreeSynergy.Wiki"
+summary = "Texts and pages"
+description = "Every text is a page you can find, link and keep: folders and spaces, history with restore, trash, templates, redirects, search with snippets, links and backlinks, and import and export as Markdown. Commands that are not built yet are shown and say so. Your texts stay in your own data folder."
+repo = "FreeSynergy/fs-wiki"
+tag = "v0.0.6"
+asset = "fs-wiki-{version}-linux-x86_64.tar.gz"
+kind = "program"
