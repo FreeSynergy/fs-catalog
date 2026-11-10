@@ -6,6 +6,7 @@ file is the `.asc` next to it. The catalog itself is signed by CI (see .github/w
 """
 import hashlib
 import json
+import re
 import subprocess
 import sys
 import time
@@ -15,15 +16,27 @@ from xml.sax.saxutils import escape, quoteattr
 HERE = __file__.rsplit("/scripts/", 1)[0] if "/scripts/" in __file__ else "."
 
 
+class Skip(Exception):
+    """This package cannot be listed right now (draft, missing release or file). The run goes on without it."""
+
+
+# The catalog is valid for this long; CI renews it twice a week (sign.yml), so several runs may fail before it lapses.
+VALID_DAYS = 35
+
+
 def gh(path):
-    out = subprocess.run(["gh", "api", path], check=True, capture_output=True, text=True).stdout
-    return json.loads(out)
+    done = subprocess.run(["gh", "api", path], capture_output=True, text=True)
+    if done.returncode != 0:
+        if "404" in done.stderr or "Not Found" in done.stderr:
+            raise Skip(f"{path} does not exist (draft or unknown tag: drafts are invisible to the API token)")
+        sys.exit(f"gh api {path} failed: {done.stderr.strip()}")
+    return json.loads(done.stdout)
 
 
 def sums(release):
     asset = next((a for a in release["assets"] if a["name"] == "SHA256SUMS.txt"), None)
     if asset is None:
-        sys.exit(f"{release['tag_name']}: no SHA256SUMS.txt")
+        raise Skip(f"{release['tag_name']}: no SHA256SUMS.txt")
     text = subprocess.run(["curl", "-fsSL", asset["browser_download_url"]], check=True, capture_output=True, text=True).stdout
     return {line.split()[1].lstrip("*"): line.split()[0] for line in text.splitlines() if line.strip()}
 
@@ -41,18 +54,18 @@ NATIVE = [
 def entry(p):
     release = gh(f"repos/{p['repo']}/releases/tags/{p['tag']}")
     if release.get("draft"):
-        sys.exit(f"{p['repo']} {p['tag']} is still a draft; publish it first (drafts are not downloadable)")
+        raise Skip(f"{p['repo']} {p['tag']} is still a draft; publish it first (drafts are not downloadable)")
     version = p["tag"].lstrip("v")
     wanted = p["asset"].format(version=version)
     asset = next((a for a in release["assets"] if a["name"] == wanted), None)
     if asset is None:
-        sys.exit(f"{p['repo']} {p['tag']}: asset {wanted} not found")
+        raise Skip(f"{p['repo']} {p['tag']}: asset {wanted} not found")
     sig = next((a for a in release["assets"] if a["name"] == wanted + ".asc"), None)
     if sig is None:
-        sys.exit(f"{wanted}: no .asc signature")
+        raise Skip(f"{wanted}: no .asc signature")
     sha = sums(release).get(wanted)
     if sha is None:
-        sys.exit(f"{wanted}: not in SHA256SUMS.txt")
+        raise Skip(f"{wanted}: not in SHA256SUMS.txt")
     q = quoteattr
     description_line = f"\n    <description><p>{escape(p['description'])}</p></description>" if p.get('description') else ""
     # optional PNG icon: `icon = "https://..."` in packages.toml; its SHA-256 goes into the signed catalog
@@ -98,14 +111,43 @@ def entry(p):
   </component>"""
 
 
+def previous(component_id):
+    """The component block of this id from the catalog.xml that is already signed, or None."""
+    try:
+        with open(f"{HERE}/catalog.xml", encoding="utf-8") as f:
+            text = f.read()
+    except OSError:
+        return None
+    for block in re.findall(r"  <component .*?</component>", text, re.S):
+        if f"<id>{escape(component_id)}</id>" in block:
+            return block
+    return None
+
+
 def main():
     with open(sys.argv[1] if len(sys.argv) > 1 else f"{HERE}/packages.toml", "rb") as f:
         packages = tomllib.load(f)["package"]
-    body = "\n".join(entry(p) for p in packages)
-    # Freshness for the store: the serial only goes up (rollback), the catalog goes stale after 21 days (freeze).
-    # CI regenerates and signs every week, so a mirror that keeps serving an old copy is refused after three weeks.
+    blocks, skipped = [], 0
+    for p in packages:
+        try:
+            blocks.append(entry(p))
+        except Skip as why:
+            # Never abort the whole catalog for one package, and never silently drop it: keep what the last signed
+            # catalog said about it (an older version is better than a vanished program) and say so in the run log.
+            skipped += 1
+            old = previous(p["id"])
+            if old:
+                blocks.append(old)
+            print(f"::warning title=catalog: {p['id']} skipped::{why}; " + ("kept the entry of the last signed catalog" if old else "no earlier entry, package left out"))
+    if not blocks:
+        sys.exit("no package could be listed - not writing an empty catalog")
+    body = "\n".join(blocks)
+    if skipped:
+        print(f"{skipped} of {len(packages)} packages skipped (see warnings)")
+    # Freshness for the store: the serial only goes up (rollback), the catalog goes stale after VALID_DAYS (freeze).
+    # CI regenerates and signs twice a week, so a mirror that keeps serving an old copy is refused after five weeks.
     serial = int(time.time())
-    expires = serial + 21 * 24 * 3600
+    expires = serial + VALID_DAYS * 24 * 3600
     with open(f"{HERE}/catalog.xml", "w") as f:
         f.write(f'<?xml version="1.0" encoding="UTF-8"?>\n<components version="1.0" origin="freesynergy" fs-serial="{serial}" fs-expires="{expires}">\n{body}\n</components>\n')
 

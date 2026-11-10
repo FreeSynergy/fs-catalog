@@ -1,6 +1,8 @@
 # Generates catalog.xml from packages.toml and the public releases, signs it with the project's signing subkey and
 # commits catalog.xml and catalog.xml.asc together (one commit: clients never see a catalog without its signature).
-# Runs when the package list changes, every Monday (the catalog expires after 21 days), and by hand.
+# Runs when the package list changes, every Monday and Thursday (the catalog is valid for 35 days, so about ten runs may
+# fail before it lapses), and by hand. A failed run opens (or updates) the issue "catalog signing failed"; the next green
+# run closes it again. No secret is ever printed.
 # Needs the secrets GPG_PRIVATE_KEY and GPG_PASSPHRASE (scripts/set-signing-secrets.sh in fs-release).
 name: sign
 on:
@@ -8,10 +10,11 @@ on:
     branches: [main]
     paths: [packages.toml, scripts/gen_catalog.py]
   schedule:
-    - cron: "17 4 * * 1"
+    - cron: "17 4 * * 1,4"
   workflow_dispatch:
 permissions:
   contents: write
+  issues: write
 concurrency: sign
 jobs:
   sign:
@@ -40,3 +43,22 @@ jobs:
           git add catalog.xml catalog.xml.asc
           git commit -m "chore: refresh and sign catalog.xml"
           git push
+      - name: Close the failure issue
+        if: success()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for n in $(gh issue list --state open --search '"catalog signing failed" in:title' --json number --jq '.[].number'); do
+            gh issue close "$n" --comment "Green again: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          done
+      - name: Make a failed run visible
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          echo "::error title=catalog signing failed::catalog.xml was NOT renewed; see $url"
+          body="The sign workflow failed (${GITHUB_EVENT_NAME}): ${url}
+          The published catalog.xml stays as it was and expires on its fs-expires date. Look at the failed step; common causes are a missing GPG secret, a package without a published release, or a push conflict."
+          n=$(gh issue list --state open --search '"catalog signing failed" in:title' --json number --jq '.[0].number // empty')
+          if [ -n "$n" ]; then gh issue comment "$n" --body "Failed again: $url"; else gh issue create --title "catalog signing failed" --body "$body"; fi
