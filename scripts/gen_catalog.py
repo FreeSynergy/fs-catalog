@@ -28,6 +28,16 @@ def sums(release):
     return {line.split()[1].lstrip("*"): line.split()[0] for line in text.splitlines() if line.strip()}
 
 
+# (file name ending, fs-format, platform): what the store's catalog reader (fs-store-catalog) matches by arch and system.
+NATIVE = [
+    (".x86_64.rpm", "rpm", "x86_64-linux-gnu"),
+    (".aarch64.rpm", "rpm", "aarch64-linux-gnu"),
+    ("_amd64.deb", "deb", "x86_64-linux-gnu"),
+    ("_arm64.deb", "deb", "aarch64-linux-gnu"),
+    ("-windows-x86_64-setup.exe", "exe", "x86_64-windows-msvc"),
+]
+
+
 def entry(p):
     release = gh(f"repos/{p['repo']}/releases/tags/{p['tag']}")
     if release.get("draft"):
@@ -50,16 +60,18 @@ def entry(p):
     if p.get("icon"):
         data = subprocess.run(["curl", "-fsSL", p["icon"]], check=True, capture_output=True).stdout
         icon_line = f"\n    <icon type=\"remote\" fs-sha256=\"{hashlib.sha256(data).hexdigest()}\">{escape(p['icon'])}</icon>"
-    # every rpm of the release for this machine (x86_64), each with its own signature: the store uses them
-    # when it was installed by rpm itself
-    rpm_lines = ""
+    # every native package of the release (rpm, deb, Windows setup.exe) per machine, each with its own signature: the
+    # store takes the one of its own system. A file without a `.asc` or without a line in SHA256SUMS.txt is left out.
+    native_lines = ""
     sha_by_name = sums(release)
+    names = {x["name"] for x in release["assets"]}
     for a in sorted(release["assets"], key=lambda a: a["name"]):
         n = a["name"]
-        if n.endswith(".x86_64.rpm") and (n + ".asc") in {x["name"] for x in release["assets"]} and n in sha_by_name:
-            sig_url = next(x["browser_download_url"] for x in release["assets"] if x["name"] == n + ".asc")
-            rpm_lines += f"""
-          <artifact type="binary" platform="x86_64-linux-gnu" fs-format="rpm" fs-signature={q(sig_url)}>
+        for suffix, fmt, platform in NATIVE:
+            if n.endswith(suffix) and (n + ".asc") in names and n in sha_by_name:
+                sig_url = next(x["browser_download_url"] for x in release["assets"] if x["name"] == n + ".asc")
+                native_lines += f"""
+          <artifact type="binary" platform="{platform}" fs-format="{fmt}" fs-signature={q(sig_url)}>
             <location>{escape(a['browser_download_url'])}</location>
             <checksum type="sha256">{sha_by_name[n]}</checksum>
           </artifact>"""
@@ -74,7 +86,7 @@ def entry(p):
           <artifact type="binary" platform="x86_64-linux-gnu">
             <location>{escape(asset['browser_download_url'])}</location>
             <checksum type="sha256">{sha}</checksum>
-          </artifact>{rpm_lines}
+          </artifact>{native_lines}
         </artifacts>
       </release>
     </releases>
