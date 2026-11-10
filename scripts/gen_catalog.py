@@ -132,10 +132,13 @@ def main():
         try:
             blocks.append(entry(p))
         except Skip as why:
-            # Never abort the whole catalog for one package, and never silently drop it: keep what the last signed
-            # catalog said about it (an older version is better than a vanished program) and say so in the run log.
-            skipped += 1
+            # A NEW tag that is not available yet (still a draft, files missing) is skipped. A tag the last signed catalog
+            # already offered that has now vanished (release deleted or withdrawn) is an error: stay red, look at it.
             old = previous(p["id"])
+            if old and f"<release version={quoteattr(p['tag'].lstrip('v'))}" in old:
+                sys.exit(f"{p['id']} {p['tag']} was in the signed catalog but is gone now: {why}")
+            skipped += 1
+            # Keep what the last signed catalog said (an older version is better than a vanished program), and say so.
             if old:
                 blocks.append(old)
             print(f"::warning title=catalog: {p['id']} skipped::{why}; " + ("kept the entry of the last signed catalog" if old else "no earlier entry, package left out"))

@@ -16,3 +16,9 @@ Properties: no secret and nothing cross-repo (pull, only this repo's own GITHUB_
 delay up to 15 minutes plus the sign run; never lowers a tag; unchanged state = no commit and no sign run, and `bump` never
 watches `catalog.xml`, so there is no loop with `sign`; drafts, incomplete releases and API errors are skipped with
 `::warning::`, never a red run.
+
+Trust: `bump` accepts a release only when `SHA256SUMS.txt.asc` verifies (gpg, `release-signing-key.asc` in this repo, same key as
+the README, fs-release and the store) against the pinned primary fingerprint 16A4A3EE563AEF51FCF0C55DED7B57C4A1904342, and only
+for repos under `FreeSynergy/`. `gen_catalog.py` skips a NEW tag that is not available yet; a tag the last signed catalog already
+offered that has vanished makes the run red. Recommended: "Immutable releases" in the program repos (owner switches it on).
+Tests: `python3 -I -m unittest discover -s tests` (workflow `test`).

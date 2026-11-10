@@ -20,7 +20,7 @@ jobs:
   sign:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Generate
         env:
           GH_TOKEN: ${{ github.token }}
@@ -42,7 +42,13 @@ jobs:
           git config user.email "support@freesynergy.net"
           git add catalog.xml catalog.xml.asc
           git commit -m "chore: refresh and sign catalog.xml"
-          git push
+          # bump may have pushed packages.toml meanwhile: rebase onto it and try again; still failing = red run
+          for i in 1 2 3; do
+            git push && exit 0
+            git pull --rebase
+          done
+          echo "::error::could not push the signed catalog after 3 attempts"
+          exit 1
       - name: Close the failure issue
         if: success()
         env:

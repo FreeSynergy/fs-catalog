@@ -16,7 +16,7 @@ jobs:
   bump:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Raise tags to the newest complete releases
         id: bump
         env:
@@ -34,8 +34,13 @@ jobs:
           git config user.email "support@freesynergy.net"
           msg=$(git diff -U0 packages.toml | grep '^+tag' | wc -l)
           git commit -m "catalog: raise ${msg} package tag(s) to the newest complete release" packages.toml
+          pushed=false
           for i in 1 2 3; do
-            git push && break
-            git pull --rebase --autostash
+            if git push; then pushed=true; break; fi
+            git pull --rebase
           done
+          if [ "$pushed" != true ]; then
+            echo "::error::could not push packages.toml after 3 attempts; sign is not started"
+            exit 1
+          fi
           gh workflow run sign.yml --ref main

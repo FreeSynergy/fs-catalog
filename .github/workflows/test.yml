@@ -1,0 +1,15 @@
+name: test
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - run: python3 -I -m unittest discover -s tests -v
+      - run: python3 -I -m py_compile scripts/gen_catalog.py scripts/bump_catalog.py
