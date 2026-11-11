@@ -1,5 +1,6 @@
 # Pull, not push: every 15 minutes, staggered (7,22,37,52) because GitHub delays full quarter-hours, look at the public releases of the programs in packages.toml; when a newer, published and
 # COMPLETE Pre-release exists (SHA256SUMS.txt, packages and every .asc), raise its tag, commit and start `sign`.
+# (Schedule registered by the repository owner account.)
 # Only this repo's own GITHUB_TOKEN is used - no secret, nothing cross-repo. No change = no commit = no sign run, so there
 # is no loop: sign.yml only commits catalog.xml/.asc, which this workflow never watches.
 # A push made with GITHUB_TOKEN starts no workflow, so `sign` is started explicitly (workflow_dispatch is the exception).
