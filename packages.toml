@@ -48,7 +48,7 @@ name = "FreeSynergy.Files"
 summary = "Files and folders"
 description = "Your files in one place, kept under their real names: folders, files, upload and download, rename, move, copy, trash and restore, and storage places. Pictures are listed as a gallery facet. What is not built yet is shown and says so."
 repo = "FreeSynergy/fs-files"
-tag = "v0.0.6"
+tag = "v0.0.7"
 asset = "fs-files-{version}-linux-x86_64.tar.gz"
 kind = "program"
 
