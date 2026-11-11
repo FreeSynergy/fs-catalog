@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<components version="1.0" origin="freesynergy" fs-serial="1794422054" fs-expires="1797446054">
+<components version="1.0" origin="freesynergy" fs-serial="1794423622" fs-expires="1797447622">
   <component type="desktop-application">
     <id>fs-store</id>
     <name>FreeSynergy.Store</name>
@@ -159,31 +159,31 @@
     <description><p>Your files in one place, kept under their real names: folders, files, upload and download, rename, move, copy, trash and restore, and storage places. Pictures are listed as a gallery facet. What is not built yet is shown and says so.</p></description>
     <url type="homepage">https://github.com/FreeSynergy/fs-files</url>
     <releases>
-      <release version="0.0.6">
+      <release version="0.0.7">
         <artifacts>
           <artifact type="binary" platform="x86_64-linux-gnu">
-            <location>https://github.com/FreeSynergy/fs-files/releases/download/v0.0.6/fs-files-0.0.6-linux-x86_64.tar.gz</location>
-            <checksum type="sha256">d28d1139e1b26937772bde4266257190c2c2a8c935ed3c5c6fd179635332f94c</checksum>
+            <location>https://github.com/FreeSynergy/fs-files/releases/download/v0.0.7/fs-files-0.0.7-linux-x86_64.tar.gz</location>
+            <checksum type="sha256">2d541622d46ab5cfd43b08a97c938af71bf250badcdac26ef0c732dd87f9f5c1</checksum>
           </artifact>
-          <artifact type="binary" platform="aarch64-linux-gnu" fs-format="rpm" fs-signature="https://github.com/FreeSynergy/fs-files/releases/download/v0.0.6/fs-files-0.0.6-1.aarch64.rpm.asc">
-            <location>https://github.com/FreeSynergy/fs-files/releases/download/v0.0.6/fs-files-0.0.6-1.aarch64.rpm</location>
-            <checksum type="sha256">cfbff9a801df8f9ac27eb1feccc0cc7bdfb4590b63f6a36ead93290a3ccc7563</checksum>
+          <artifact type="binary" platform="aarch64-linux-gnu" fs-format="rpm" fs-signature="https://github.com/FreeSynergy/fs-files/releases/download/v0.0.7/fs-files-0.0.7-1.aarch64.rpm.asc">
+            <location>https://github.com/FreeSynergy/fs-files/releases/download/v0.0.7/fs-files-0.0.7-1.aarch64.rpm</location>
+            <checksum type="sha256">43dc80740c9f5d21dc216af29038065fc54e0ff3c45092438de3302c4a163054</checksum>
           </artifact>
-          <artifact type="binary" platform="x86_64-linux-gnu" fs-format="rpm" fs-signature="https://github.com/FreeSynergy/fs-files/releases/download/v0.0.6/fs-files-0.0.6-1.x86_64.rpm.asc">
-            <location>https://github.com/FreeSynergy/fs-files/releases/download/v0.0.6/fs-files-0.0.6-1.x86_64.rpm</location>
-            <checksum type="sha256">6e5c894cd5150fcc0103611c75dc4a632e8d78b858b64f04f4f26f91ca43ab2f</checksum>
+          <artifact type="binary" platform="x86_64-linux-gnu" fs-format="rpm" fs-signature="https://github.com/FreeSynergy/fs-files/releases/download/v0.0.7/fs-files-0.0.7-1.x86_64.rpm.asc">
+            <location>https://github.com/FreeSynergy/fs-files/releases/download/v0.0.7/fs-files-0.0.7-1.x86_64.rpm</location>
+            <checksum type="sha256">0a016285c385f49d02a9e60a8ee67bca12cb9624a7faab188c1b000326ae416d</checksum>
           </artifact>
-          <artifact type="binary" platform="x86_64-windows-msvc" fs-format="exe" fs-signature="https://github.com/FreeSynergy/fs-files/releases/download/v0.0.6/fs-files-0.0.6-windows-x86_64-setup.exe.asc">
-            <location>https://github.com/FreeSynergy/fs-files/releases/download/v0.0.6/fs-files-0.0.6-windows-x86_64-setup.exe</location>
-            <checksum type="sha256">03f16627f26247c5f85172af4349c41e014f07ee80eb181cf723271d48f826e6</checksum>
+          <artifact type="binary" platform="x86_64-windows-msvc" fs-format="exe" fs-signature="https://github.com/FreeSynergy/fs-files/releases/download/v0.0.7/fs-files-0.0.7-windows-x86_64-setup.exe.asc">
+            <location>https://github.com/FreeSynergy/fs-files/releases/download/v0.0.7/fs-files-0.0.7-windows-x86_64-setup.exe</location>
+            <checksum type="sha256">7a5794d42eebee4d29ffa65bf68e88fc15a388010dab3028ab65eab240b0c506</checksum>
           </artifact>
-          <artifact type="binary" platform="x86_64-linux-gnu" fs-format="deb" fs-signature="https://github.com/FreeSynergy/fs-files/releases/download/v0.0.6/fs-files_0.0.6-1_amd64.deb.asc">
-            <location>https://github.com/FreeSynergy/fs-files/releases/download/v0.0.6/fs-files_0.0.6-1_amd64.deb</location>
-            <checksum type="sha256">2eb47d7e52d704852bbe06a98ccd39ae05f28f210200a7404ddad3340e076a31</checksum>
+          <artifact type="binary" platform="x86_64-linux-gnu" fs-format="deb" fs-signature="https://github.com/FreeSynergy/fs-files/releases/download/v0.0.7/fs-files_0.0.7-1_amd64.deb.asc">
+            <location>https://github.com/FreeSynergy/fs-files/releases/download/v0.0.7/fs-files_0.0.7-1_amd64.deb</location>
+            <checksum type="sha256">ca0593148acef4d6c099e34850ed60bcb8b2b2458183a257c1dd675ffd7f53a3</checksum>
           </artifact>
-          <artifact type="binary" platform="aarch64-linux-gnu" fs-format="deb" fs-signature="https://github.com/FreeSynergy/fs-files/releases/download/v0.0.6/fs-files_0.0.6-1_arm64.deb.asc">
-            <location>https://github.com/FreeSynergy/fs-files/releases/download/v0.0.6/fs-files_0.0.6-1_arm64.deb</location>
-            <checksum type="sha256">8e7bab5fbc0e36ad5acef216bf32513fccf0896691bceca61721d3da4f196533</checksum>
+          <artifact type="binary" platform="aarch64-linux-gnu" fs-format="deb" fs-signature="https://github.com/FreeSynergy/fs-files/releases/download/v0.0.7/fs-files_0.0.7-1_arm64.deb.asc">
+            <location>https://github.com/FreeSynergy/fs-files/releases/download/v0.0.7/fs-files_0.0.7-1_arm64.deb</location>
+            <checksum type="sha256">1799518ffb506b2ef30ca68ee94fbe0969292934c5e247cf1b371ab5246effe1</checksum>
           </artifact>
         </artifacts>
       </release>
@@ -191,7 +191,7 @@
     <custom>
       <value key="fs:kind">program</value>
       <value key="fs:format">tar.gz</value>
-      <value key="fs:signature">https://github.com/FreeSynergy/fs-files/releases/download/v0.0.6/fs-files-0.0.6-linux-x86_64.tar.gz.asc</value>
+      <value key="fs:signature">https://github.com/FreeSynergy/fs-files/releases/download/v0.0.7/fs-files-0.0.7-linux-x86_64.tar.gz.asc</value>
     </custom>
   </component>
   <component type="desktop-application">
