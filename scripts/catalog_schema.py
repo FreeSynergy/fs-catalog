@@ -36,7 +36,9 @@ FEATURE_KEY = re.compile(r"^[a-z0-9][a-z0-9-]*$")
 CAPABILITY = re.compile(r"^([a-z0-9][a-z0-9._-]*)\s*(?:>=|=)?\s*(\d+(?:\.\d+)?)?$")
 FINGERPRINT = re.compile(r"^[0-9A-Fa-f ]{40,}$")
 CONTROL = re.compile(r"[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]")
-IMAGE_MAGIC = (b"\x89PNG\r\n\x1a\n", b"\xff\xd8\xff", b"<svg", b"<?xml", b"RIFF")  # PNG, JPEG, SVG, WebP
+PNG_MAGIC = b"\x89PNG\r\n\x1a\n"
+ICON_LIMIT = 1024 * 1024          # icons: PNG only, at most 1 MiB (as fs-store-engine/src/icons.rs)
+SCREENSHOT_LIMIT = 5 * 1024 * 1024
 
 # The same rule as the store's reader (fs-store-catalog details.rs `clear_license`): named, plain characters, and not one of
 # the words that mean "unknown". A picture without a clear licence is an error here (the store would withhold it).
@@ -163,7 +165,7 @@ def validate(p, caps=None, schema=1):
     # icon: required for EVERY package
     icon = p.get("icon")
     if not icon:
-        need("icon", "every package needs an icon (https address of a PNG or SVG); the store shows it as missing")
+        need("icon", "every package needs an icon (https address of a PNG, at most 1 MiB); the store shows it as missing")
     elif not https(icon):
         err("icon", "must be an https address")
     if p.get("icon_sha256") and not SHA256.match(str(p["icon_sha256"])):
@@ -190,7 +192,7 @@ def validate(p, caps=None, schema=1):
     # capabilities (ADR 0068): names only from the list of fs-interfaces
     named = {}
     for field in ("provides", "requires", "recommends"):
-        named[field] = capability_list(p.get(field), field, caps, err, warn)
+        named[field] = capability_list(p.get(field), field, caps, err if schema >= 2 else warn, warn)
     for name in set(named["provides"]) & (set(named["requires"]) | set(named["recommends"])):
         warn("requires", f"`{name}` is both offered and needed by the same package")
     feats = p.get("feature", [])
@@ -207,7 +209,7 @@ def validate(p, caps=None, schema=1):
             err(where, f"feature `{f['key']}` is listed twice")
         seen.add(f["key"])
         for field in ("provides", "requires", "recommends"):
-            capability_list(f.get(field), f"feature `{f['key']}` {field}", caps, err, warn)
+            capability_list(f.get(field), f"feature `{f['key']}` {field}", caps, err if schema >= 2 else warn, warn)
 
     mt = p.get("mediatypes", [])
     if not isinstance(mt, list) or not all(isinstance(m, str) and MEDIATYPE.match(m) for m in mt):
@@ -342,9 +344,15 @@ def uses_capabilities(p):
     )
 
 
+def icon_ok(data):
+    """An icon is a PNG (SVG is refused: it can carry script and external references) of at most ICON_LIMIT bytes."""
+    return data.startswith(PNG_MAGIC) and len(data) <= ICON_LIMIT
+
+
 def image_ok(data):
-    """Is this a picture file (and not an error page)?"""
-    return any(data.startswith(m) for m in IMAGE_MAGIC)
+    """A picture is PNG, JPEG or WebP (RIFF only with `WEBP` at offset 8), at most SCREENSHOT_LIMIT bytes; never SVG or XML."""
+    magic = data.startswith(PNG_MAGIC) or data.startswith(b"\xff\xd8\xff") or (data[:4] == b"RIFF" and data[8:12] == b"WEBP")
+    return magic and len(data) <= SCREENSHOT_LIMIT
 
 
 # --- XML pieces ----------------------------------------------------------------------------------------------------------
