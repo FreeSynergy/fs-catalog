@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<components version="1.0" origin="freesynergy" fs-serial="1794510936" fs-expires="1797534936">
+<components version="1.0" origin="freesynergy" fs-serial="1794511032" fs-expires="1797535032">
   <component type="desktop-application">
     <id>fs-store</id>
     <name>FreeSynergy.Store</name>
@@ -218,6 +218,49 @@
       <value key="fs:kind">program</value>
       <value key="fs:format">tar.gz</value>
       <value key="fs:signature">https://github.com/FreeSynergy/fs-files/releases/download/v0.0.9/fs-files-0.0.9-linux-x86_64.tar.gz.asc</value>
+    </custom>
+  </component>
+  <component type="desktop-application">
+    <id>fs-wiki</id>
+    <name>FreeSynergy.Wiki</name>
+    <summary>Notes that belong together</summary>
+    <description><p>Notes that belong together: pages with blocks, a tree of pages, each page in German and English as one page with a language switch, and read-only access to the project documentation. Your pages stay in your own data folder.</p></description>
+    <url type="homepage">https://github.com/FreeSynergy/fs-wiki</url>
+    <releases>
+      <release version="0.0.7" date="2026-11-12">
+        <artifacts>
+          <artifact type="binary" platform="x86_64-linux-gnu">
+            <location>https://github.com/FreeSynergy/fs-wiki/releases/download/v0.0.7/fs-wiki-0.0.7-linux-x86_64.tar.gz</location>
+            <checksum type="sha256">84401d081ef9b90cc56ea81a797317b2db1514d59a9561c15da1d3a43eddc6bd</checksum>
+            <size type="download">21190632</size>
+          </artifact>
+          <artifact type="binary" platform="aarch64-linux-gnu" fs-format="rpm" fs-signature="https://github.com/FreeSynergy/fs-wiki/releases/download/v0.0.7/fs-wiki-0.0.7-1.aarch64.rpm.asc">
+            <location>https://github.com/FreeSynergy/fs-wiki/releases/download/v0.0.7/fs-wiki-0.0.7-1.aarch64.rpm</location>
+            <checksum type="sha256">f3f93bffb3ab1262c292ead3e2fd14ad00a2a59562cf05fe5f374782a192463c</checksum>
+            <size type="download">14065541</size>
+          </artifact>
+          <artifact type="binary" platform="x86_64-linux-gnu" fs-format="rpm" fs-signature="https://github.com/FreeSynergy/fs-wiki/releases/download/v0.0.7/fs-wiki-0.0.7-1.x86_64.rpm.asc">
+            <location>https://github.com/FreeSynergy/fs-wiki/releases/download/v0.0.7/fs-wiki-0.0.7-1.x86_64.rpm</location>
+            <checksum type="sha256">8ca5af22ad66b16b0db9fbdd8be3b01c91b3a49bdd68eac95caeb489791261c0</checksum>
+            <size type="download">14822339</size>
+          </artifact>
+          <artifact type="binary" platform="x86_64-linux-gnu" fs-format="deb" fs-signature="https://github.com/FreeSynergy/fs-wiki/releases/download/v0.0.7/fs-wiki_0.0.7-1_amd64.deb.asc">
+            <location>https://github.com/FreeSynergy/fs-wiki/releases/download/v0.0.7/fs-wiki_0.0.7-1_amd64.deb</location>
+            <checksum type="sha256">371c78d3a62938f8f7fded1ece2ee1d88c9f13d7e00a65a73344887431359726</checksum>
+            <size type="download">13828820</size>
+          </artifact>
+          <artifact type="binary" platform="aarch64-linux-gnu" fs-format="deb" fs-signature="https://github.com/FreeSynergy/fs-wiki/releases/download/v0.0.7/fs-wiki_0.0.7-1_arm64.deb.asc">
+            <location>https://github.com/FreeSynergy/fs-wiki/releases/download/v0.0.7/fs-wiki_0.0.7-1_arm64.deb</location>
+            <checksum type="sha256">d7d0e84e7362f5f44f635ef772b3c98f2b2a91466697cd420a22ad29f5b289f8</checksum>
+            <size type="download">12097260</size>
+          </artifact>
+        </artifacts>
+      </release>
+    </releases>
+    <custom>
+      <value key="fs:kind">program</value>
+      <value key="fs:format">tar.gz</value>
+      <value key="fs:signature">https://github.com/FreeSynergy/fs-wiki/releases/download/v0.0.7/fs-wiki-0.0.7-linux-x86_64.tar.gz.asc</value>
     </custom>
   </component>
   <component type="desktop-application">
