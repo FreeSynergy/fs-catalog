@@ -65,7 +65,7 @@ class Validation(unittest.TestCase):
 
     def test_kinds(self):
         for k in ("program", "frontend", "component", "theme", "server", "icon-theme"):
-            p = with_(kind=k, requires=["tasks"])
+            p = with_(kind=k, requires=["tasks"], min_store="0.0.13")
             self.assertEqual(problems(p), [], k)
         self.assertIn("kind", messages(with_(kind="Server")))
         self.assertIn("kind", messages(with_(kind="app")))
@@ -76,7 +76,7 @@ class Validation(unittest.TestCase):
         self.assertIn("provides", messages({**no, "kind": "program"}))
         self.assertIn("requires", messages({**no, "kind": "frontend"}))
         self.assertEqual(problems({**no, "kind": "theme"}), [])      # counter-check: a theme offers nothing
-        self.assertEqual(problems({**no, "kind": "icon-theme"}), [])
+        self.assertEqual(problems({**no, "kind": "icon-theme", "min_store": "0.0.13"}), [])
         self.assertEqual(problems({**no, "kind": "frontend", "requires": ["tasks"]}), [])
 
     def test_capability_names_only_from_the_list(self):
@@ -141,13 +141,26 @@ class Validation(unittest.TestCase):
 
     def test_wiki_description(self):
         block = "0192f3a0-7b1c-7a3e-8c4d-5e6f7a8b9c0d"
-        self.assertEqual(problems(with_(description_wiki={"block": block, "lang": "en"})), [])
-        self.assertEqual(problems(with_(description_wiki={"block": block, "lang": "de", "source_rev": 3})), [])
-        self.assertIn("UUIDv7", messages(with_(description_wiki={"block": "0192f3a0-7b1c-4a3e-8c4d-5e6f7a8b9c0d", "lang": "en"})))  # v4
-        self.assertIn("UUIDv7", messages(with_(description_wiki={"block": "not-a-uuid", "lang": "en"})))
-        self.assertIn("source_rev", messages(with_(description_wiki={"block": block, "lang": "de"})))  # translation without sourceRev
-        self.assertIn("lang", messages(with_(description_wiki={"block": block})))
-        self.assertIn("source_rev", messages(with_(description_wiki={"block": block, "lang": "de", "source_rev": -1})))
+        self.assertEqual(problems(with_(description_wiki={"block": block, "source_rev": 3})), [])
+        self.assertEqual(problems(with_(description_wiki={"block": block, "source_rev": 0, "lang": "de"})), [])  # lang = optional wish
+        self.assertIn("UUIDv7", messages(with_(description_wiki={"block": "0192f3a0-7b1c-4a3e-8c4d-5e6f7a8b9c0d", "source_rev": 1})))  # v4
+        self.assertIn("UUIDv7", messages(with_(description_wiki={"block": "not-a-uuid", "source_rev": 1})))
+        self.assertIn("source_rev", messages(with_(description_wiki={"block": block})))
+        self.assertIn("source_rev", messages(with_(description_wiki={"block": block, "source_rev": -1})))
+        self.assertIn("wish", messages(with_(description_wiki={"block": block, "source_rev": 1, "lang": "DE!"})))
+        for k in ("translation_of", "translationOf", "blocks"):  # one block, no block per language
+            self.assertIn("not a field", messages(with_(description_wiki={"block": block, "source_rev": 1, k: "x"})))
+
+    def test_new_kinds_need_schema_2_and_min_store(self):
+        for k in ("server", "icon-theme"):
+            p = with_(kind=k, min_store="0.0.13")
+            self.assertEqual(problems(p, schema=2), [], k)
+            self.assertIn("schema = 2", messages(p, schema=1))
+            self.assertIn("min_store", messages(with_(kind=k)))
+        self.assertIn("min_store", messages(with_(kind="server", min_store="13")))
+        self.assertEqual(problems(with_(kind="theme")), [])            # old kinds need no minimum
+        self.assertEqual(problems(with_(min_store="0.0.13")), [])     # but may state one
+        self.assertIn("min_store", messages(with_(min_store="new")))
 
     def test_mediatypes(self):
         self.assertEqual(problems(with_(mediatypes=["text/calendar", "application/vnd.x+json"])), [])
@@ -237,7 +250,8 @@ class Generator(unittest.TestCase):
             requires=["store"], recommends=["comments 1.0"], upstream="https://u.org/x", source_code="https://u.org/s.tgz",
             upstream_signature="ABCD" * 10, maker="M",
             history=[{"version": "0.0.2", "changes": {"en": "Fixed.", "de": "Behoben."}}, {"version": "0.0.1", "date": "2026-11-01", "changes": "First."}],
-            description_wiki={"block": "0192f3a0-7b1c-7a3e-8c4d-5e6f7a8b9c0d", "lang": "de", "source_rev": 3},
+            description_wiki={"block": "0192f3a0-7b1c-7a3e-8c4d-5e6f7a8b9c0d", "source_rev": 3},
+            min_store="0.0.13",
             feature=[{"key": "a", "name": "A", "provides": ["places"]}, {"key": "b"}],
         )
         x = build(p)
@@ -263,7 +277,8 @@ class Generator(unittest.TestCase):
         self.assertNotIn("fs:feature.b.provides", c)
         self.assertEqual((c["fs:upstream"], c["fs:source-code"], c["fs:maker"]), ("https://u.org/x", "https://u.org/s.tgz", "M"))
         self.assertEqual(c["fs:upstream-signature"], "ABCD" * 10)
-        self.assertEqual((c["fs:description-wiki"], c["fs:description-wiki-lang"], c["fs:description-wiki-source-rev"]), ("0192f3a0-7b1c-7a3e-8c4d-5e6f7a8b9c0d", "de", "3"))
+        self.assertEqual((c["fs:description-wiki"], c["fs:description-wiki-source-rev"], c["fs:min-store"]), ("0192f3a0-7b1c-7a3e-8c4d-5e6f7a8b9c0d", "3", "0.0.13"))
+        self.assertNotIn("fs:description-wiki-lang", c)  # optional wish, not written when not given
         self.assertEqual(root.find("icon").get("fs-sha256"), hashlib.sha256(local_fetch("x.png")).hexdigest())
 
     def test_old_entry_gets_no_new_fields(self):  # Gegenprobe: nothing is made up
@@ -276,7 +291,7 @@ class Generator(unittest.TestCase):
 
     def test_kind_to_appstream_type(self):
         for kind, typ in (("server", "service"), ("icon-theme", "icon-theme"), ("theme", "addon"), ("program", "desktop-application"), ("frontend", "desktop-application")):
-            x = build(with_(kind=kind, requires=["tasks"]))
+            x = build(with_(kind=kind, requires=["tasks"], min_store="0.0.13"))
             self.assertEqual(ET.fromstring(x).get("type"), typ)
             self.assertEqual(ET.fromstring(x).findtext("custom/value"), kind)
 

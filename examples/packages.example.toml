@@ -25,9 +25,9 @@ source_code = "https://example.org/notes/src-0.0.2.tar.gz"
 maker = "Example Makers"
 
 [package.description_wiki]     # ADR 0072: a block of the wiki; the text above stays the fallback
-block = "0192f3a0-7b1c-7a3e-8c4d-5e6f7a8b9c0d"
-lang = "de"
-source_rev = 3                 # rev of the English source block this translation was made from
+block = "0192f3a0-7b1c-7a3e-8c4d-5e6f7a8b9c0d"   # ONE block; its language variants (en, de, ...) live inside it
+source_rev = 3                 # rev of the block this entry was made from (the store can tell when the wiki moved on)
+# lang = "de"                  # optional: only a wish for reading, not a second block
 
 [[package.feature]]            # a feature with its own capabilities (may stay empty: only `key`)
 key = "contacts"
@@ -64,6 +64,7 @@ asset = "example-server-{version}-linux-x86_64.tar.gz"
 kind = "server"
 icon = "https://raw.githubusercontent.com/FreeSynergy/fs-catalog/main/examples/images/example-server-icon.png"
 provides = ["identity.oidc 1.0", "identity.accounts"]
+min_store = "0.0.13"           # first store version with the fixed reader; put into the real catalog only after it is released
 
 [[package]]
 id = "example-icons"
@@ -74,4 +75,5 @@ repo = "FreeSynergy/example-icons"
 tag = "v0.0.1"
 asset = "example-icons-{version}-linux-x86_64.tar.gz"
 kind = "icon-theme"
+min_store = "0.0.13"
 icon = "https://raw.githubusercontent.com/FreeSynergy/fs-catalog/main/examples/images/example-icons-icon.png"

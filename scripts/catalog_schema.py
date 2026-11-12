@@ -23,6 +23,9 @@ KINDS = {
     "icon-theme": "icon-theme",
 }
 
+# Kinds that stores before the one with the fixed reader refuse (they skip the entry with "unknown fs:kind").
+NEW_KINDS = ("server", "icon-theme")
+
 SHA256 = re.compile(r"^[0-9a-f]{64}$")
 UUID7 = re.compile(r"^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$")
 LANG = re.compile(r"^[a-z]{2,3}(-[A-Za-z0-9]{2,8})*$")
@@ -210,24 +213,31 @@ def validate(p, caps=None, schema=1):
     if not isinstance(mt, list) or not all(isinstance(m, str) and MEDIATYPE.match(m) for m in mt):
         err("mediatypes", "must be a list of media types like `text/calendar`")
 
-    # description from the wiki (ADR 0072): block id (UUIDv7) + sourceRev + language
+    # description from the wiki (ADR 0072): ONE block id (UUIDv7); the language variants live inside the block
     w = p.get("description_wiki")
     if w is not None:
         if not isinstance(w, dict):
-            err("description_wiki", "must be a table: block, lang, source_rev")
+            err("description_wiki", "must be a table: block, source_rev (and optionally lang)")
         else:
             if not UUID7.match(str(w.get("block", ""))):
                 err("description_wiki", "`block` must be a UUIDv7 (the id of the wiki block)")
-            lang = w.get("lang")
-            if not isinstance(lang, str) or not LANG.match(lang):
-                err("description_wiki", "`lang` is required (a language code like `en` or `de`)")
             rev = w.get("source_rev")
-            if rev is not None and (not isinstance(rev, int) or isinstance(rev, bool) or rev < 0):
-                err("description_wiki", "`source_rev` must be a whole number (the rev of the source block)")
-            if isinstance(lang, str) and lang != "en" and rev is None:
-                err("description_wiki", "a translation (`lang` other than `en`) needs `source_rev`: without it the store cannot tell that it is outdated")
-            if lang == "en" and rev is not None:
-                warn("description_wiki", "`source_rev` belongs to translations only; ignored for `en`")
+            if not isinstance(rev, int) or isinstance(rev, bool) or rev < 0:
+                err("description_wiki", "`source_rev` (the rev of the block this catalog entry was made from) is required, a whole number")
+            if w.get("lang") is not None and (not isinstance(w["lang"], str) or not LANG.match(w["lang"])):
+                err("description_wiki", "`lang` is only a wish for reading (a language code like `de`); leave it out for the reader's own language")
+            for k in w:
+                if k not in ("block", "source_rev", "lang"):
+                    err("description_wiki", f"`{k}` is not a field (one block, variants inside it: no translationOf, no block per language)")
+
+    # kinds the first stores do not know: only with an explicit minimum store version, and only in format 2
+    if kind in NEW_KINDS:
+        if schema < 2:
+            err("kind", f"`{kind}` is only written with `schema = 2` in packages.toml (older stores do not know it)")
+        if not p.get("min_store"):
+            err("min_store", f"`{kind}` needs `min_store` (the first fs-store version that reads this kind, e.g. \"0.0.13\"); put such packages into the real catalog only AFTER that store is released")
+    if p.get("min_store") is not None and not (isinstance(p["min_store"], str) and VERSION.match(p["min_store"])):
+        err("min_store", "must be a version MAJOR.MINOR.PATCH")
 
     # pictures: only https, hash, CLEAR licence, source and caption
     shots = p.get("screenshot", [])
@@ -389,7 +399,9 @@ def custom_values(p, kind, format_, signature_url):
     w = p.get("description_wiki")
     if w:
         vals.append(("fs:description-wiki", w["block"]))
-        vals.append(("fs:description-wiki-lang", w["lang"]))
-        if w.get("source_rev") is not None and w["lang"] != "en":
-            vals.append(("fs:description-wiki-source-rev", str(w["source_rev"])))
+        vals.append(("fs:description-wiki-source-rev", str(w["source_rev"])))
+        if w.get("lang"):
+            vals.append(("fs:description-wiki-lang", w["lang"]))
+    if p.get("min_store"):
+        vals.append(("fs:min-store", p["min_store"]))
     return "".join(f"\n      <value key={quoteattr(k)}>{escape(str(v))}</value>" for k, v in vals)

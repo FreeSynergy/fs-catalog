@@ -19,7 +19,7 @@ Write sub-tables (`[package.x]`, `[[package.x]]`) **after** the plain keys of th
 | Key | XML | Rule |
 |---|---|---|
 | `id`, `name`, `summary`, `repo`, `tag`, `asset` | as before | required; `id` lower-case; `tag` `vMAJOR.MINOR.PATCH` |
-| `kind` | `fs:kind`, component `type` | `program` (default), `frontend`, `component`, `theme`, `server`, `icon-theme`. AppStream type: program and frontend `desktop-application`, component and theme `addon`, server `service`, icon-theme `icon-theme`. `server` and `icon-theme` are new; the store shows them locked until packages exist. |
+| `kind` | `fs:kind`, component `type` | `program` (default), `frontend`, `component`, `theme`, `server`, `icon-theme`. AppStream type: program and frontend `desktop-application`, component and theme `addon`, server `service`, icon-theme `icon-theme`. `server` and `icon-theme` are new: today's reader skips such an entry as "unknown fs:kind" (only that entry, not the catalog). They are written only with `schema = 2` AND `min_store`, and go into the REAL catalog only AFTER a store with the fixed reader is released. |
 | `description` | `<description>` | text, or a table `{ en = "..", de = ".." }` (variants of ONE description, `xml:lang`; `en` required, written first). Blank line = new paragraph. Format 2: required (it is the fallback of the store). |
 | `icon`, `icon_sha256` | `<icon type="remote" fs-sha256>` | https address of a picture. The generator downloads it, checks it is a picture, writes its SHA-256 (and compares with `icon_sha256` when given). Format 2: **required for every package**. |
 | `provides`, `requires`, `recommends` | `fs:provides` ... | list of capabilities `"name"` or `"name major.minor"` (also `name>=1.2`). Names ONLY from `capabilities.txt` of fs-interfaces; unknown name = error with a "did you mean". A `planned` name is a warning. No level = any. Kept apart from rights. |
@@ -32,7 +32,8 @@ Write sub-tables (`[package.x]`, `[[package.x]]`) **after** the plain keys of th
 | `upstream_signature` | `fs:upstream-signature` | maker's signature: key fingerprint (hex) or https address; needs `upstream`. |
 | `source_code` | `fs:source-code` | https address of the source code of this version. Format 2: required when `upstream` is set (ADR 0068, mirrored with the package). |
 | `maker` | `fs:maker` | name of the maker. |
-| `[package.description_wiki]` | `fs:description-wiki` (block id), `-lang`, `-source-rev` | ADR 0072: `block` UUIDv7, `lang`, `source_rev` (number; required when `lang` is not `en`, so the store can show a translation as outdated). The text description stays the fallback. |
+| `[package.description_wiki]` | `fs:description-wiki` (block id), `-source-rev`, optional `-lang` | ADR 0072, Nutzerentscheid: DE/EN are ONE page with language variants, so ONE block id (UUIDv7) and the variants live inside the block. `block`, `source_rev` (number, required: the rev this entry was made from, so the store can tell the wiki moved on), `lang` optional (only a wish for reading, never a second block). No `translationOf`, no block per language. The text description stays the fallback. |
+| `min_store` | `fs:min-store` | first fs-store version that reads this entry, `MAJOR.MINOR.PATCH`. **Required for `server` and `icon-theme`**, which are written only with `schema = 2`. |
 | `[[package.screenshot]]` | `<screenshots><screenshot><image type="source" fs-sha256 fs-license fs-source><caption xml:lang>` | `url` https, `license` clear (SPDX id; `unknown`, `none`, `proprietary`, `all rights reserved` and odd characters are refused: **no clear licence, no picture**), `source` (address or maker), `caption` (text or language table), `sha256` optional (downloaded and compared; the computed hash is written). The first picture is the default. |
 
 Per kind (format 2): `program` and `server` must have `provides`; `frontend` must have `requires`; `theme`, `icon-theme`, `component` need nothing extra.
@@ -41,7 +42,7 @@ Per kind (format 2): `program` and `server` must have `provides`; `frontend` mus
 `<size type="download">` of the artifact, `<release date>`, the first `<description>` of the release (English), `fs:provides/requires/recommends`
 (comma list, `name major.minor`), `fs:upstream*`, `fs:source-code`, `fs:description-wiki` (the whole value is the block id), `<icon>`, `<screenshot>`
 (https + `fs-sha256` + clear `fs-license`, else withheld). Not yet read by the store (see CHANGES-FOR-STORE.md): `xml:lang` choice, `<size type="installed">`,
-`fs:maker`, `fs-source`, `fs:feature.*`, `<provides><mediatype>`, `fs:description-wiki-lang`/`-source-rev`, kinds `server`/`icon-theme`.
+`fs:maker`, `fs-source`, `fs:feature.*`, `<provides><mediatype>`, `fs:description-wiki-source-rev`/`-lang`, kinds `server`/`icon-theme`.
 
 ## Examples and tests
 `examples/packages.example.toml` shows every field; `examples/catalog.example.xml` is what the generator makes from it (offline, checked by the tests);
