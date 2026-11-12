@@ -53,7 +53,6 @@
       <value key="fs:source-code">https://example.org/notes/src-0.0.2.tar.gz</value>
       <value key="fs:maker">Example Makers</value>
       <value key="fs:description-wiki">0192f3a0-7b1c-7a3e-8c4d-5e6f7a8b9c0d</value>
-      <value key="fs:description-wiki-lang">de</value>
       <value key="fs:description-wiki-source-rev">3</value>
     </custom>
   </component>
@@ -80,6 +79,7 @@
       <value key="fs:format">tar.gz</value>
       <value key="fs:signature">https://x/example-server/example-server-0.0.1-linux-x86_64.tar.gz.asc</value>
       <value key="fs:provides">identity.oidc 1.0, identity.accounts</value>
+      <value key="fs:min-store">0.0.13</value>
     </custom>
   </component>
   <component type="icon-theme">
@@ -104,6 +104,7 @@
       <value key="fs:kind">icon-theme</value>
       <value key="fs:format">tar.gz</value>
       <value key="fs:signature">https://x/example-icons/example-icons-0.0.1-linux-x86_64.tar.gz.asc</value>
+      <value key="fs:min-store">0.0.13</value>
     </custom>
   </component>
 </components>
