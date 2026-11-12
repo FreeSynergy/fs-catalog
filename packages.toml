@@ -1,73 +1,94 @@
 # The packages this catalog offers. One table per package; `tag` is the release tag in `repo`.
 # `python3 scripts/gen_catalog.py` reads the public release and writes catalog.xml; CI does it and signs (sign.yml).
 # Versions count 0.0.N (ADR 0064).
+schema = 2
+capabilities_ref = "v0.0.19"
 
 [[package]]
 id = "fs-store"
 name = "FreeSynergy.Store"
 summary = "Install, update and extend FreeSynergy programs"
-description = "The store of FreeSynergy: it installs the programs you choose from signed catalogs, keeps them up to date, and takes them away again. Every file is checked against the project key before anything is installed, and a failed update is rolled back."
+description = { en = "The store of FreeSynergy: it installs the programs you choose from signed catalogs, keeps them up to date, and takes them away again. Every file is checked against the project key before anything is installed, and a failed update is rolled back.", de = "Der Store von FreeSynergy: Er installiert die Programme, die du aus signierten Katalogen auswählst, hält sie aktuell und entfernt sie wieder. Jede Datei wird vor der Installation gegen den Projektschlüssel geprüft, und ein fehlgeschlagenes Update wird zurückgenommen." }
 repo = "FreeSynergy/fs-store"
 tag = "v0.0.13"
 asset = "fs-store-{version}-linux-x86_64.tar.gz"
 kind = "program"
+provides = ["store"]
+
+[[package.history]]
+version = "0.0.13"
+changes = { en = "Reads catalog format 2: an unknown or not yet installable kind is shown locked instead of failing the catalog. Descriptions, summaries and release texts are chosen by language (xml:lang). More catalog fields are read and shown on the package page (installed size, maker, features, media types, wiki block). `fs-store install X` and `update X` fail for a locked package.", de = "Liest das Katalogformat 2: Eine unbekannte oder noch nicht installierbare Art wird gesperrt angezeigt, statt den Katalog scheitern zu lassen. Beschreibungen, Kurztexte und Release-Texte werden nach Sprache (xml:lang) gewählt. Weitere Katalogfelder werden gelesen und auf der Paketseite gezeigt (installierte Größe, Hersteller, Features, Medientypen, Wiki-Block). `fs-store install X` und `update X` schlagen bei einem gesperrten Paket fehl." }
 
 [[package]]
 id = "fs-tasks"
 name = "FreeSynergy.Tasks"
 summary = "Tasks and Kanban"
-description = "Plan what has to be done: lists, status and Kanban views, due dates, relations between tasks, and import and export as iCalendar. Your tasks stay in your own data folder."
+description = { en = "Plan what has to be done: lists, status and Kanban views, due dates, relations between tasks, and import and export as iCalendar. Your tasks stay in your own data folder.", de = "Plane, was zu tun ist: Listen, Status- und Kanban-Ansichten, Fälligkeitsdaten, Beziehungen zwischen Aufgaben sowie Import und Export als iCalendar. Deine Aufgaben bleiben in deinem eigenen Datenordner." }
 repo = "FreeSynergy/fs-tasks"
 tag = "v0.0.6"
 asset = "fs-tasks-{version}-linux-x86_64.tar.gz"
 kind = "program"
+provides = ["tasks", "dependency.evaluate", "dependency.cycle-check"]
 
 [[package]]
 id = "fs-people"
 name = "FreeSynergy.People"
 summary = "People and contacts"
-description = "Your people and contacts: cards with names, mail, phone and notes, groups of people, and vCard import and export. Everything stays in your own data folder."
+description = { en = "Your people and contacts: cards with names, mail, phone and notes, groups of people, and vCard import and export. Everything stays in your own data folder.", de = "Deine Personen und Kontakte: Karten mit Namen, E-Mail, Telefon und Notizen, Gruppen von Personen sowie vCard-Import und -Export. Alles bleibt in deinem eigenen Datenordner." }
 repo = "FreeSynergy/fs-people"
 tag = "v0.0.3"
 asset = "fs-people-{version}-linux-x86_64.tar.gz"
 kind = "program"
+provides = ["people.persons"]
 
 [[package]]
 id = "fs-calendar"
 name = "FreeSynergy.Calendar"
 summary = "Calendar and events"
-description = "Plan your days: events with times and zones, repeating events, a month, week and day view, and import and export as iCalendar. Your events stay in your own data folder."
+description = { en = "Plan your days: events with times and zones, repeating events, a month, week and day view, and import and export as iCalendar. Your events stay in your own data folder.", de = "Plane deine Tage: Termine mit Zeiten und Zeitzonen, wiederkehrende Termine, eine Monats-, Wochen- und Tagesansicht sowie Import und Export als iCalendar. Deine Termine bleiben in deinem eigenen Datenordner." }
 repo = "FreeSynergy/fs-calendar"
 tag = "v0.0.2"
 asset = "fs-calendar-{version}-linux-x86_64.tar.gz"
 kind = "program"
+provides = ["events"]
 
 [[package]]
 id = "fs-files"
 name = "FreeSynergy.Files"
 summary = "Files and folders"
-description = "Your files in one place, kept under their real names: folders, files, upload and download, rename, move, copy, trash and restore, and storage places. Pictures are listed as a gallery facet. What is not built yet is shown and says so."
+description = { en = "Your files in one place, kept under their real names: folders, files, upload and download, rename, move, copy, trash and restore, and storage places. Pictures are listed as a gallery facet. What is not built yet is shown and says so.", de = "Deine Dateien an einem Ort, unter ihren echten Namen: Ordner, Dateien, Hochladen und Herunterladen, Umbenennen, Verschieben, Kopieren, Papierkorb und Wiederherstellen sowie Speicherorte. Bilder werden als Galerie-Facette aufgelistet. Was noch nicht gebaut ist, wird angezeigt und sagt es." }
 repo = "FreeSynergy/fs-files"
 tag = "v0.0.9"
 asset = "fs-files-{version}-linux-x86_64.tar.gz"
 kind = "program"
+provides = ["files"]
+
+[[package.history]]
+version = "0.0.9"
+changes = { en = "The long calls (rescan, upload, download) no longer freeze the file window: they run on a worker and the window answers meanwhile, shows \"Running...\" and refuses a second start with a note. There is still no abort and no progress. Built on fs-components v0.0.13.", de = "Die langen Aufrufe (Rescan, Hochladen, Herunterladen) frieren das Dateifenster nicht mehr ein: Sie laufen auf einem Arbeiter, das Fenster antwortet währenddessen, zeigt „Läuft...“ und lehnt einen zweiten Start mit Hinweis ab. Es gibt weiterhin keinen Abbruch und keinen Fortschritt. Gebaut auf fs-components v0.0.13." }
 
 [[package]]
 id = "fs-wiki"
 name = "FreeSynergy.Wiki"
 summary = "Notes that belong together"
-description = "Notes that belong together: pages with blocks, a tree of pages, each page in German and English as one page with a language switch, and read-only access to the project documentation. Your pages stay in your own data folder."
+description = { en = "Notes that belong together: pages with blocks, a tree of pages, each page in German and English as one page with a language switch, and read-only access to the project documentation. Your pages stay in your own data folder.", de = "Notizen, die zusammengehören: Seiten mit Blöcken, ein Baum von Seiten, jede Seite auf Deutsch und Englisch als eine Seite mit Sprachumschalter sowie lesender Zugriff auf die Projektdokumentation. Deine Seiten bleiben in deinem eigenen Datenordner." }
 repo = "FreeSynergy/fs-wiki"
 tag = "v0.0.7"
 asset = "fs-wiki-{version}-linux-x86_64.tar.gz"
 kind = "program"
+provides = ["texts"]
+
+[[package.history]]
+version = "0.0.7"
+changes = { en = "New reading wiki: the project documentation is imported byte for byte into one wiki and shown read only, with a sidebar, the page and a search. German and English are one page with a language bar. Blinc now comes only through fs-components, so keys of other layouts (@, +, /, AltGr) type correctly; the window checks the server version and every call has a time limit.", de = "Neues Lesewiki: Die Projektdokumentation wird byte-genau in ein Wiki importiert und nur lesend gezeigt, mit Seitenleiste, Seite und Suche. Deutsch und Englisch sind eine Seite mit Sprachleiste. Blinc kommt jetzt nur noch über fs-components, damit die Tasten anderer Layouts (@, +, /, AltGr) richtig tippen; das Fenster prüft die Version des Servers und jeder Aufruf hat ein Zeitlimit." }
 
 [[package]]
 id = "fs-maps"
 name = "FreeSynergy.Maps"
 summary = "Places and maps"
-description = "Your places as lists and sheets. A first version: there is no map view yet, only the lists and the sheet of each place."
+description = { en = "Your places as lists and sheets. A first version: there is no map view yet, only the lists and the sheet of each place.", de = "Deine Orte als Listen und Blätter. Eine erste Version: Es gibt noch keine Kartenansicht, nur die Listen und das Blatt jedes Ortes." }
 repo = "FreeSynergy/fs-maps"
 tag = "v0.0.2"
 asset = "fs-maps-{version}-linux-x86_64.tar.gz"
 kind = "program"
+provides = ["places"]
