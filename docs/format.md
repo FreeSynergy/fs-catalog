@@ -11,7 +11,7 @@ Every finding is reported at once as `<package>: <field>: <message>`; errors sto
 | Key | Meaning |
 |---|---|
 | `schema` | `1` (default) or `2`. With `2` the rules marked "format 2" below are **errors**; with `1` they are warnings, so the weekly signing never stops for an old entry. The catalog gets `fs-schema="2"` on `<components>`. |
-| `capabilities_ref` | Tag of `fs-interfaces` whose `schema/capabilities.txt` is THE capability list (default `v0.0.19`). Read with `gh api`; never copied into this repo. `--capabilities FILE` / `$FS_CAPABILITIES_FILE` use a local file (offline). |
+| `capabilities_ref` | Tag (form `vX.Y.Z`, checked) of `fs-interfaces` whose `schema/capabilities.txt` is THE capability list (default `v0.0.19`). Read with `gh api`; never copied into this repo. `--capabilities FILE` / `$FS_CAPABILITIES_FILE` use a local file (offline). |
 
 ## Per package (`[[package]]`)
 Write sub-tables (`[package.x]`, `[[package.x]]`) **after** the plain keys of the package: `bump_catalog.py` edits `tag` by text.
@@ -33,13 +33,13 @@ Write sub-tables (`[package.x]`, `[[package.x]]`) **after** the plain keys of th
 | `source_code` | `fs:source-code` | https address of the source code of this version. Format 2: required when `upstream` is set (ADR 0068, mirrored with the package). |
 | `maker` | `fs:maker` | name of the maker. |
 | `[package.description_wiki]` | `fs:description-wiki` (block id), `-source-rev`, optional `-lang` | ADR 0072, Nutzerentscheid: DE/EN are ONE page with language variants, so ONE block id (UUIDv7) and the variants live inside the block. `block`, `source_rev` (number, required: the rev this entry was made from, so the store can tell the wiki moved on), `lang` optional (only a wish for reading, never a second block). No `translationOf`, no block per language. The text description stays the fallback. |
-| `min_store` | `fs:min-store` | first fs-store version that reads this entry, `MAJOR.MINOR.PATCH`. **Required for `server` and `icon-theme`**, which are written only with `schema = 2`. |
+| `min_store` | `fs:min-store` | first fs-store version that reads this entry, `MAJOR.MINOR.PATCH`. It protects only from store 0.0.13 on: older stores ignore `fs:min-store` for kinds they know (program, ...); for unknown kinds they just leave the entry out (skipped), they do not fail. **Required for `server` and `icon-theme`**, which are written only with `schema = 2`. |
 | `[[package.screenshot]]` | `<screenshots><screenshot><image type="source" fs-sha256 fs-license fs-source><caption xml:lang>` | `url` https, `license` clear (SPDX id; `unknown`, `none`, `proprietary`, `all rights reserved` and odd characters are refused: **no clear licence, no picture**), `source` (address or maker), `caption` (text or language table), `sha256` optional (downloaded and compared; the computed hash is written). PNG, JPEG or WebP, at most 5 MiB. The first picture is the default. |
 
 Per kind (format 2): `program` and `server` must have `provides`; `frontend` must have `requires`; `theme`, `icon-theme`, `component` need nothing extra.
 
 ## Downloads and failures
-Icons and pictures are fetched over https only (also after redirects, `--proto =https --proto-redir =https`, at most 3 redirects), never from a loopback or private address, with a size limit; the file type is checked by its first bytes (WebP only with `WEBP` at offset 8; no SVG, no XML). A **failed download never stops bump or sign**: the package is skipped with a warning and the entry of the last signed catalog is kept. A wrong file (not a picture, hash differs, too large) is an error. Under `schema = 1` wrong capability names are only warnings, and the list is read from GitHub only when a package names a capability (if it cannot be read: a warning).
+Icons and pictures are fetched over https only (also after redirects, `--proto =https --proto-redir =https`, at most 3 redirects), with a size limit; the FIRST host is refused when it resolves to a loopback or private address (a redirect, at most 3 and https only, or DNS rebinding between that check and the download is **not** covered: the generator runs on a GitHub runner with no internal services and reads only public pictures); the file type is checked by its first bytes (WebP only with `WEBP` at offset 8; no SVG, no XML). A **failed download never stops bump or sign**: the package is skipped with a warning and the entry of the last signed catalog is kept. A wrong file (not a picture, hash differs, too large) is an error. Under `schema = 1` wrong capability names are only warnings, and the list is read from GitHub only when a package names a capability (if it cannot be read: a warning).
 
 ## What the store reads (see `fs_store_catalog::Details`)
 `<size type="download">` of the artifact, `<release date>`, the first `<description>` of the release (English), `fs:provides/requires/recommends`
@@ -50,4 +50,4 @@ Icons and pictures are fetched over https only (also after redirects, `--proto =
 ## Examples and tests
 `examples/packages.example.toml` shows every field; `examples/catalog.example.xml` is what the generator makes from it (offline, checked by the tests);
 `examples/make_images.py` makes the pictures (generated for this repo, CC0-1.0). Tests: `python3 -I -m unittest discover -s tests`.
-Refresh the golden file after a change on purpose: `python3 -I tests/test_schema.py --write-golden`.
+Refresh the golden file after a change on purpose: `python3 -I tests/support.py --write-golden`.

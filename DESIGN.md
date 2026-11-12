@@ -24,7 +24,7 @@ offered that has vanished makes the run red. Recommended: "Immutable releases" i
 Tests: `python3 -I -m unittest discover -s tests` (workflow `test`).
 
 ## Format 2 (schema, 2026-11-12)
-`scripts/catalog_schema.py` holds the rules (pure: validate, XML pieces); `gen_catalog.py` reads, fetches (icons, pictures: type and
+The rules are pure modules, each under 300 lines (ADR 0043): `schema_base.py` (values, texts, capabilities), `schema_rules.py` + `schema_rules_content.py` (`validate`; nothing in packages.toml can make it raise), `schema_xml.py`, faced by `catalog_schema.py`. `catalog_net.py` downloads (https only, size limits, `Transient` failures), `catalog_check.py` holds the run settings and `check`. `gen_catalog.py` reads, fetches (icons, pictures: type and
 hash checked), validates ALL packages before any network use and builds. Capability names are read from the pinned tag of
 `fs-interfaces` (`capabilities_ref`), never copied. `schema = 2` in packages.toml turns the format-2 requirements into errors; until
 then they are warnings, so `bump` and `sign` never stop for an old entry. Reference: docs/format.md; for the store: CHANGES-FOR-STORE.md.
