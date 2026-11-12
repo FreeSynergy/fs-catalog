@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<components version="1.0" origin="freesynergy" fs-serial="1794490633" fs-expires="1797514633">
+<components version="1.0" origin="freesynergy" fs-serial="1794497798" fs-expires="1797521798">
   <component type="desktop-application">
     <id>fs-store</id>
     <name>FreeSynergy.Store</name>
@@ -7,32 +7,32 @@
     <description><p>The store of FreeSynergy: it installs the programs you choose from signed catalogs, keeps them up to date, and takes them away again. Every file is checked against the project key before anything is installed, and a failed update is rolled back.</p></description>
     <url type="homepage">https://github.com/FreeSynergy/fs-store</url>
     <releases>
-      <release version="0.0.11" date="2026-11-11">
+      <release version="0.0.13" date="2026-11-12">
         <artifacts>
           <artifact type="binary" platform="x86_64-linux-gnu">
-            <location>https://github.com/FreeSynergy/fs-store/releases/download/v0.0.11/fs-store-0.0.11-linux-x86_64.tar.gz</location>
-            <checksum type="sha256">75b6be3dd145b66f0eb534ff4ff90749ff85d033ac4aa16a6a08fa7f2c2cb3d5</checksum>
-            <size type="download">16761190</size>
+            <location>https://github.com/FreeSynergy/fs-store/releases/download/v0.0.13/fs-store-0.0.13-linux-x86_64.tar.gz</location>
+            <checksum type="sha256">f1f59b1ca423a74b7b8f1433b6497ab48da6cc31932b4c229a7f475ac65cbbc3</checksum>
+            <size type="download">17357483</size>
           </artifact>
-          <artifact type="binary" platform="aarch64-linux-gnu" fs-format="rpm" fs-signature="https://github.com/FreeSynergy/fs-store/releases/download/v0.0.11/fs-store-0.0.11-1.aarch64.rpm.asc">
-            <location>https://github.com/FreeSynergy/fs-store/releases/download/v0.0.11/fs-store-0.0.11-1.aarch64.rpm</location>
-            <checksum type="sha256">fdd7c9a41b28c4af770fb864ffa00c347bcda03b9fbec2495ef116f72bcd97ac</checksum>
-            <size type="download">11040530</size>
+          <artifact type="binary" platform="aarch64-linux-gnu" fs-format="rpm" fs-signature="https://github.com/FreeSynergy/fs-store/releases/download/v0.0.13/fs-store-0.0.13-1.aarch64.rpm.asc">
+            <location>https://github.com/FreeSynergy/fs-store/releases/download/v0.0.13/fs-store-0.0.13-1.aarch64.rpm</location>
+            <checksum type="sha256">f83fd20ca63ef7f0c9f0350a87498685504e333309e9d5587845dfbb52780c4e</checksum>
+            <size type="download">11407923</size>
           </artifact>
-          <artifact type="binary" platform="x86_64-linux-gnu" fs-format="rpm" fs-signature="https://github.com/FreeSynergy/fs-store/releases/download/v0.0.11/fs-store-0.0.11-1.x86_64.rpm.asc">
-            <location>https://github.com/FreeSynergy/fs-store/releases/download/v0.0.11/fs-store-0.0.11-1.x86_64.rpm</location>
-            <checksum type="sha256">70f5c92f061825343c1550537d9628761de9a5a1a262a281b55bc925ab88f0c2</checksum>
-            <size type="download">12057670</size>
+          <artifact type="binary" platform="x86_64-linux-gnu" fs-format="rpm" fs-signature="https://github.com/FreeSynergy/fs-store/releases/download/v0.0.13/fs-store-0.0.13-1.x86_64.rpm.asc">
+            <location>https://github.com/FreeSynergy/fs-store/releases/download/v0.0.13/fs-store-0.0.13-1.x86_64.rpm</location>
+            <checksum type="sha256">2b2d715c083ba8279b97a6132de0dcbb7a814ad26714accf743fca2ac52c70cc</checksum>
+            <size type="download">12441922</size>
           </artifact>
-          <artifact type="binary" platform="x86_64-linux-gnu" fs-format="deb" fs-signature="https://github.com/FreeSynergy/fs-store/releases/download/v0.0.11/fs-store_0.0.11-1_amd64.deb.asc">
-            <location>https://github.com/FreeSynergy/fs-store/releases/download/v0.0.11/fs-store_0.0.11-1_amd64.deb</location>
-            <checksum type="sha256">614a01c56b706d5ce7b4d461332eedb18796708f046cb4804c2508c31708692c</checksum>
-            <size type="download">11140192</size>
+          <artifact type="binary" platform="x86_64-linux-gnu" fs-format="deb" fs-signature="https://github.com/FreeSynergy/fs-store/releases/download/v0.0.13/fs-store_0.0.13-1_amd64.deb.asc">
+            <location>https://github.com/FreeSynergy/fs-store/releases/download/v0.0.13/fs-store_0.0.13-1_amd64.deb</location>
+            <checksum type="sha256">2df9b66f13bbfdf19762f6954f5844602e1ab427bc0dccb80f0a81e432ca55fd</checksum>
+            <size type="download">11527444</size>
           </artifact>
-          <artifact type="binary" platform="aarch64-linux-gnu" fs-format="deb" fs-signature="https://github.com/FreeSynergy/fs-store/releases/download/v0.0.11/fs-store_0.0.11-1_arm64.deb.asc">
-            <location>https://github.com/FreeSynergy/fs-store/releases/download/v0.0.11/fs-store_0.0.11-1_arm64.deb</location>
-            <checksum type="sha256">cd30a6def6e6d0275bf0433ff35da40a9b7a7d9c5f1a76aaeb9263bbf7122c24</checksum>
-            <size type="download">9528580</size>
+          <artifact type="binary" platform="aarch64-linux-gnu" fs-format="deb" fs-signature="https://github.com/FreeSynergy/fs-store/releases/download/v0.0.13/fs-store_0.0.13-1_arm64.deb.asc">
+            <location>https://github.com/FreeSynergy/fs-store/releases/download/v0.0.13/fs-store_0.0.13-1_arm64.deb</location>
+            <checksum type="sha256">21009d917b2b903512df870eaf15a92d062a4a6ab112174bbd9df89f36b74f70</checksum>
+            <size type="download">9871772</size>
           </artifact>
         </artifacts>
       </release>
@@ -40,7 +40,7 @@
     <custom>
       <value key="fs:kind">program</value>
       <value key="fs:format">tar.gz</value>
-      <value key="fs:signature">https://github.com/FreeSynergy/fs-store/releases/download/v0.0.11/fs-store-0.0.11-linux-x86_64.tar.gz.asc</value>
+      <value key="fs:signature">https://github.com/FreeSynergy/fs-store/releases/download/v0.0.13/fs-store-0.0.13-linux-x86_64.tar.gz.asc</value>
     </custom>
   </component>
   <component type="desktop-application">
@@ -50,32 +50,32 @@
     <description><p>Plan what has to be done: lists, status and Kanban views, due dates, relations between tasks, and import and export as iCalendar. Your tasks stay in your own data folder.</p></description>
     <url type="homepage">https://github.com/FreeSynergy/fs-tasks</url>
     <releases>
-      <release version="0.0.3" date="2026-11-08">
+      <release version="0.0.6" date="2026-11-12">
         <artifacts>
           <artifact type="binary" platform="x86_64-linux-gnu">
-            <location>https://github.com/FreeSynergy/fs-tasks/releases/download/v0.0.3/fs-tasks-0.0.3-linux-x86_64.tar.gz</location>
-            <checksum type="sha256">c4dcc37b971826091ca0fcd6461facd3c4baf72a64d952943c46e6d956c288e1</checksum>
-            <size type="download">18471695</size>
+            <location>https://github.com/FreeSynergy/fs-tasks/releases/download/v0.0.6/fs-tasks-0.0.6-linux-x86_64.tar.gz</location>
+            <checksum type="sha256">36303be7bee54391a51413d180bcd796c644768b6a1c839c7d9543f542daadb6</checksum>
+            <size type="download">19293848</size>
           </artifact>
-          <artifact type="binary" platform="aarch64-linux-gnu" fs-format="rpm" fs-signature="https://github.com/FreeSynergy/fs-tasks/releases/download/v0.0.3/fs-tasks-0.0.3-1.aarch64.rpm.asc">
-            <location>https://github.com/FreeSynergy/fs-tasks/releases/download/v0.0.3/fs-tasks-0.0.3-1.aarch64.rpm</location>
-            <checksum type="sha256">599d651a94d18a5bc819c736eec86dbf460fe849b04f40fadc60208f99e5dc42</checksum>
-            <size type="download">12540246</size>
+          <artifact type="binary" platform="aarch64-linux-gnu" fs-format="rpm" fs-signature="https://github.com/FreeSynergy/fs-tasks/releases/download/v0.0.6/fs-tasks-0.0.6-1.aarch64.rpm.asc">
+            <location>https://github.com/FreeSynergy/fs-tasks/releases/download/v0.0.6/fs-tasks-0.0.6-1.aarch64.rpm</location>
+            <checksum type="sha256">639bd9a670c196ea371957d6c369a9f57552ebed759c921c859eda6249dea266</checksum>
+            <size type="download">13042328</size>
           </artifact>
-          <artifact type="binary" platform="x86_64-linux-gnu" fs-format="rpm" fs-signature="https://github.com/FreeSynergy/fs-tasks/releases/download/v0.0.3/fs-tasks-0.0.3-1.x86_64.rpm.asc">
-            <location>https://github.com/FreeSynergy/fs-tasks/releases/download/v0.0.3/fs-tasks-0.0.3-1.x86_64.rpm</location>
-            <checksum type="sha256">b1a8596f191e5aa930d9e43f2b6ef482686cdadec70ebd14a59ec73225efd15a</checksum>
-            <size type="download">13217975</size>
+          <artifact type="binary" platform="x86_64-linux-gnu" fs-format="rpm" fs-signature="https://github.com/FreeSynergy/fs-tasks/releases/download/v0.0.6/fs-tasks-0.0.6-1.x86_64.rpm.asc">
+            <location>https://github.com/FreeSynergy/fs-tasks/releases/download/v0.0.6/fs-tasks-0.0.6-1.x86_64.rpm</location>
+            <checksum type="sha256">9380e446754dee2b3c79cffbb4c84da6161fd116a6a87006463a6dde02dc93dd</checksum>
+            <size type="download">13729619</size>
           </artifact>
-          <artifact type="binary" platform="x86_64-linux-gnu" fs-format="deb" fs-signature="https://github.com/FreeSynergy/fs-tasks/releases/download/v0.0.3/fs-tasks_0.0.3-1_amd64.deb.asc">
-            <location>https://github.com/FreeSynergy/fs-tasks/releases/download/v0.0.3/fs-tasks_0.0.3-1_amd64.deb</location>
-            <checksum type="sha256">9ebd57a1c8941aa734b3371ec7062f723c170af23b21af2a5ebfd952d7cfbcd0</checksum>
-            <size type="download">12204860</size>
+          <artifact type="binary" platform="x86_64-linux-gnu" fs-format="deb" fs-signature="https://github.com/FreeSynergy/fs-tasks/releases/download/v0.0.6/fs-tasks_0.0.6-1_amd64.deb.asc">
+            <location>https://github.com/FreeSynergy/fs-tasks/releases/download/v0.0.6/fs-tasks_0.0.6-1_amd64.deb</location>
+            <checksum type="sha256">651de42170567afb65a9f572640881a1012e43ceb09708f247c6f57b609af7f5</checksum>
+            <size type="download">12690492</size>
           </artifact>
-          <artifact type="binary" platform="aarch64-linux-gnu" fs-format="deb" fs-signature="https://github.com/FreeSynergy/fs-tasks/releases/download/v0.0.3/fs-tasks_0.0.3-1_arm64.deb.asc">
-            <location>https://github.com/FreeSynergy/fs-tasks/releases/download/v0.0.3/fs-tasks_0.0.3-1_arm64.deb</location>
-            <checksum type="sha256">a1a002b69992b226eb262311d306642e9d5f8dd4bb54f1e755df9393ddc2be89</checksum>
-            <size type="download">10800752</size>
+          <artifact type="binary" platform="aarch64-linux-gnu" fs-format="deb" fs-signature="https://github.com/FreeSynergy/fs-tasks/releases/download/v0.0.6/fs-tasks_0.0.6-1_arm64.deb.asc">
+            <location>https://github.com/FreeSynergy/fs-tasks/releases/download/v0.0.6/fs-tasks_0.0.6-1_arm64.deb</location>
+            <checksum type="sha256">3a19ec1dfa59f2ff8fe5432bfb8ca77ee782d15b8fefd279c2f7a2e480efbeb5</checksum>
+            <size type="download">11250124</size>
           </artifact>
         </artifacts>
       </release>
@@ -83,7 +83,7 @@
     <custom>
       <value key="fs:kind">program</value>
       <value key="fs:format">tar.gz</value>
-      <value key="fs:signature">https://github.com/FreeSynergy/fs-tasks/releases/download/v0.0.3/fs-tasks-0.0.3-linux-x86_64.tar.gz.asc</value>
+      <value key="fs:signature">https://github.com/FreeSynergy/fs-tasks/releases/download/v0.0.6/fs-tasks-0.0.6-linux-x86_64.tar.gz.asc</value>
     </custom>
   </component>
   <component type="desktop-application">
