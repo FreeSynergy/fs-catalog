@@ -8,7 +8,7 @@ name: sign
 on:
   push:
     branches: [main]
-    paths: [packages.toml, scripts/gen_catalog.py, scripts/catalog_schema.py]
+    paths: [packages.toml, scripts/gen_catalog.py, scripts/catalog_schema.py, scripts/schema_base.py, scripts/schema_rules.py, scripts/schema_rules_content.py, scripts/schema_xml.py, scripts/catalog_net.py, scripts/catalog_check.py]
   schedule:
     - cron: "17 4 * * 1,4"
   workflow_dispatch:

@@ -6,40 +6,32 @@ file is the `.asc` next to it. The catalog itself is signed by CI (see .github/w
 """
 import hashlib
 import importlib.util
-import ipaddress
 import json
 import os
 import re
-import socket
 import subprocess
 import sys
 import time
 import tomllib
-import urllib.parse
 import xml.etree.ElementTree as ET
 from xml.sax.saxutils import escape, quoteattr
 
 HERE = __file__.rsplit("/scripts/", 1)[0] if "/scripts/" in __file__ else "."
 
 
-def _load_schema():
+def _load(*names):
     # by path, not by `import`: `python3 -I` and importlib loading do not have scripts/ on the module path
-    path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "catalog_schema.py")
-    spec = importlib.util.spec_from_file_location("catalog_schema", path)
-    mod = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(mod)
-    return mod
+    for name in names:
+        if name not in sys.modules:
+            spec = importlib.util.spec_from_file_location(name, os.path.join(os.path.dirname(os.path.abspath(__file__)), name + ".py"))
+            sys.modules[name] = mod = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(mod)
+    return [sys.modules[n] for n in names]
 
 
-schema = _load_schema()
-
-# Settings of this run (set by main; defaults let `entry` be called alone, as the tests do).
-CTX = {"schema": 1, "caps": None, "caps_file": None, "caps_ref": "v0.0.19"}
-
-
-class Skip(Exception):
-    """This package cannot be listed right now (draft, missing release or file). The run goes on without it."""
-
+schema, net, checks = _load("catalog_schema", "catalog_net", "catalog_check")
+CTX, check, CapabilityListError, capabilities = checks.CTX, checks.check, checks.CapabilityListError, checks.capabilities
+Skip, Transient, fetch = net.Skip, net.Transient, net.fetch
 
 # The catalog is valid for this long; CI renews it twice a week (sign.yml), so several runs may fail before it lapses.
 VALID_DAYS = 35
@@ -60,85 +52,6 @@ def sums(release):
         raise Skip(f"{release['tag_name']}: no SHA256SUMS.txt")
     text = subprocess.run(["curl", "-fsSL", asset["browser_download_url"]], check=True, capture_output=True, text=True).stdout
     return {line.split()[1].lstrip("*"): line.split()[0] for line in text.splitlines() if line.strip()}
-
-
-class Transient(Skip):
-    """A download failed (network, server): nothing is wrong with the data. Never stops bump or sign (see `main`)."""
-
-
-def _public_host(url):
-    """False when the host of `url` resolves to a loopback, private, link-local or otherwise internal address."""
-    host = urllib.parse.urlsplit(url).hostname or ""
-    try:
-        found = {a[4][0] for a in socket.getaddrinfo(host, 443, proto=socket.IPPROTO_TCP)}
-    except OSError:
-        return True  # cannot resolve now: curl fails the same way and that is reported as a transient failure
-    return all(ipaddress.ip_address(a.split("%")[0]).is_global for a in found)
-
-
-def fetch(url, limit=schema.SCREENSHOT_LIMIT):
-    """Bytes of a public file (icon, picture): https only (also after redirects), at most `limit` bytes, no internal hosts.
-    A failed download is `Transient` (try again next run), never a half entry; a file over the limit is an error."""
-    if not _public_host(url):
-        sys.exit(f"{url}: the host is a loopback or private address; only public https addresses are fetched")
-    done = subprocess.run(
-        ["curl", "-fsSL", "--proto", "=https", "--proto-redir", "=https", "--max-redirs", "3", "--max-time", "60", "--max-filesize", str(limit), url],
-        capture_output=True)
-    if done.returncode == 63:  # CURLE_FILESIZE_EXCEEDED
-        sys.exit(f"{url}: larger than {limit} bytes")
-    if done.returncode != 0:
-        raise Transient(f"{url}: could not be downloaded (curl exit {done.returncode})")
-    if len(done.stdout) > limit:
-        sys.exit(f"{url}: larger than {limit} bytes")
-    return done.stdout
-
-
-class CapabilityListError(Exception):
-    """The capability list could not be read."""
-
-
-def capabilities():
-    """The capability list of fs-interfaces (ADR 0068): ONE list, read from there, never copied here. A local file
-    (`--capabilities FILE` or $FS_CAPABILITIES_FILE) is for offline runs and tests; otherwise the pinned tag is read with `gh api`."""
-    if CTX["caps"] is None:
-        path = CTX["caps_file"] or os.environ.get("FS_CAPABILITIES_FILE")
-        if path:
-            with open(path, encoding="utf-8") as f:
-                text = f.read()
-        else:
-            done = subprocess.run(
-                ["gh", "api", "-H", "Accept: application/vnd.github.raw", f"repos/FreeSynergy/fs-interfaces/contents/schema/capabilities.txt?ref={CTX['caps_ref']}"],
-                capture_output=True, text=True)
-            if done.returncode != 0:
-                raise CapabilityListError(f"cannot read the capability list of fs-interfaces {CTX['caps_ref']}: {done.stderr.strip() or 'gh api failed'}")
-            text = done.stdout
-        CTX["caps"] = schema.parse_capabilities(text)
-        if not CTX["caps"]:
-            CTX["caps"] = None
-            raise CapabilityListError("the capability list is empty or not in the form `key | name | status | text`")
-    return CTX["caps"]
-
-
-def check(packages):
-    """Validates every package, reports ALL findings at once, stops on errors. Warnings go out as workflow warnings."""
-    issues = []
-    for p in packages:
-        caps = None
-        if schema.uses_capabilities(p):
-            try:
-                caps = capabilities()
-            except CapabilityListError as why:
-                # format 2 must check the names; for format 1 a failing read (no token, network) is a warning, never a stopped run
-                if CTX["schema"] >= 2:
-                    sys.exit(str(why))
-                print(f"::warning title=catalog: capability names not checked::{why}")
-        issues += schema.validate(p, caps, CTX["schema"])
-    for i in issues:
-        if not i.error:
-            print(f"::warning title=catalog: {i.package}::{i.field}: {i.message}")
-    errors = [str(i) for i in issues if i.error]
-    if errors:
-        sys.exit("packages.toml is not valid:\n  " + "\n  ".join(errors))
 
 
 # (file name ending, fs-format, platform): what the store's catalog reader (fs-store-catalog) matches by arch and system.
@@ -267,10 +180,7 @@ def main():
     with open(args[0] if args else f"{HERE}/packages.toml", "rb") as f:
         data = tomllib.load(f)
     packages = data["package"]
-    CTX["schema"] = data.get("schema", 1)
-    CTX["caps_ref"] = data.get("capabilities_ref", CTX["caps_ref"])
-    if CTX["schema"] not in (1, 2):
-        sys.exit(f"packages.toml: schema = {CTX['schema']} is not known (1 or 2)")
+    checks.read_settings(data)
     check(packages)  # all findings at once, before any network use
     CTX["checked"] = True
     if "--check" in sys.argv:
