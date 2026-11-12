@@ -1,0 +1,77 @@
+# Example packages.toml in format 2 (see docs/format.md). Not offered to anyone: it only shows every field and is checked by
+# the tests (tests/test_schema.py builds examples/catalog.example.xml from it, offline, and compares).
+# The pictures are made by examples/make_images.py and dedicated to the public domain (CC0-1.0).
+schema = 2                     # 2 = the rules of format 2 are errors (icon, provides, ...); without it they are warnings
+capabilities_ref = "v0.0.19"   # tag of fs-interfaces whose schema/capabilities.txt is THE capability list
+
+[[package]]
+id = "example-notes"
+name = "Example.Notes"
+summary = "A program that shows every field"
+description = { en = "Shows every field of the catalog format.\n\nA second paragraph.", de = "Zeigt jedes Feld des Katalogformats.\n\nEin zweiter Absatz." }
+repo = "FreeSynergy/example-notes"
+tag = "v0.0.2"
+asset = "example-notes-{version}-linux-x86_64.tar.gz"
+kind = "program"
+icon = "https://raw.githubusercontent.com/FreeSynergy/fs-catalog/main/examples/images/example-program-icon.png"
+provides = ["texts 1.0", "people.persons 1.2"]
+requires = ["store"]
+recommends = ["comments"]
+mediatypes = ["text/markdown", "text/calendar"]
+installed_size = { "0.0.2" = 4194304 }
+upstream = "https://example.org/notes"
+upstream_signature = "16A4 A3EE 563A EF51 FCF0  C55D ED7B 57C4 A190 4342"
+source_code = "https://example.org/notes/src-0.0.2.tar.gz"
+maker = "Example Makers"
+
+[package.description_wiki]     # ADR 0072: a block of the wiki; the text above stays the fallback
+block = "0192f3a0-7b1c-7a3e-8c4d-5e6f7a8b9c0d"
+lang = "de"
+source_rev = 3                 # rev of the English source block this translation was made from
+
+[[package.feature]]            # a feature with its own capabilities (may stay empty: only `key`)
+key = "contacts"
+name = "Contacts"
+provides = ["people.persons 1.0"]
+requires = ["people.persons 1.0"]
+
+[[package.feature]]
+key = "export"
+
+[[package.screenshot]]
+url = "https://raw.githubusercontent.com/FreeSynergy/fs-catalog/main/examples/images/example-program-screenshot.png"
+license = "CC0-1.0"
+source = "Generated for fs-catalog (examples/make_images.py)"
+caption = { en = "The main window", de = "Das Hauptfenster" }
+
+[[package.history]]
+version = "0.0.2"              # the current release: its text; the date comes from the GitHub release
+changes = { en = "Fixed the list view.", de = "Die Listenansicht ist korrigiert." }
+
+[[package.history]]
+version = "0.0.1"
+date = "2026-11-01"
+changes = { en = "First version.", de = "Erste Version." }
+
+[[package]]
+id = "example-server"
+name = "Example.Server"
+summary = "A server (kind `server`): the store shows it locked until such packages exist"
+description = "A server package."
+repo = "FreeSynergy/example-server"
+tag = "v0.0.1"
+asset = "example-server-{version}-linux-x86_64.tar.gz"
+kind = "server"
+icon = "https://raw.githubusercontent.com/FreeSynergy/fs-catalog/main/examples/images/example-server-icon.png"
+provides = ["identity.oidc 1.0", "identity.accounts"]
+
+[[package]]
+id = "example-icons"
+name = "Example.Icons"
+summary = "An icon set (kind `icon-theme`)"
+description = "An icon set."
+repo = "FreeSynergy/example-icons"
+tag = "v0.0.1"
+asset = "example-icons-{version}-linux-x86_64.tar.gz"
+kind = "icon-theme"
+icon = "https://raw.githubusercontent.com/FreeSynergy/fs-catalog/main/examples/images/example-icons-icon.png"

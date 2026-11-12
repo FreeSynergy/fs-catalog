@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<components version="1.0" origin="freesynergy" fs-schema="2" fs-serial="0" fs-expires="0">
+  <component type="desktop-application">
+    <id>example-notes</id>
+    <name>Example.Notes</name>
+    <summary>A program that shows every field</summary>
+    <description xml:lang="en"><p>Shows every field of the catalog format.</p><p>A second paragraph.</p></description>
+    <description xml:lang="de"><p>Zeigt jedes Feld des Katalogformats.</p><p>Ein zweiter Absatz.</p></description>
+    <url type="homepage">https://github.com/FreeSynergy/example-notes</url>
+    <icon type="remote" fs-sha256="66afeced1934177a358042daaee8fbce2ee6502cd875c248f9ca3c1870124e37">https://raw.githubusercontent.com/FreeSynergy/fs-catalog/main/examples/images/example-program-icon.png</icon>
+    <provides>
+      <mediatype>text/markdown</mediatype>
+      <mediatype>text/calendar</mediatype>
+    </provides>
+    <screenshots>
+      <screenshot type="default">
+        <image type="source" fs-sha256="02084c5c594fff9bdfc150fc7b3a9f186e66f12c50b204157f8e442bc552f2a2" fs-license="CC0-1.0" fs-source="Generated for fs-catalog (examples/make_images.py)">https://raw.githubusercontent.com/FreeSynergy/fs-catalog/main/examples/images/example-program-screenshot.png</image>
+        <caption xml:lang="en">The main window</caption>
+        <caption xml:lang="de">Das Hauptfenster</caption>
+      </screenshot>
+    </screenshots>
+    <releases>
+      <release version="0.0.2" date="2026-11-12">
+        <description xml:lang="en"><p>Fixed the list view.</p></description>
+        <description xml:lang="de"><p>Die Listenansicht ist korrigiert.</p></description>
+        <artifacts>
+          <artifact type="binary" platform="x86_64-linux-gnu">
+            <location>https://x/example-notes/example-notes-0.0.2-linux-x86_64.tar.gz</location>
+            <checksum type="sha256">abababababababababababababababababababababababababababababababab</checksum>
+            <size type="download">123456</size>
+            <size type="installed">4194304</size>
+          </artifact>
+        </artifacts>
+      </release>
+      <release version="0.0.1" date="2026-11-01">
+        <description xml:lang="en"><p>First version.</p></description>
+        <description xml:lang="de"><p>Erste Version.</p></description>
+      </release>
+    </releases>
+    <custom>
+      <value key="fs:kind">program</value>
+      <value key="fs:format">tar.gz</value>
+      <value key="fs:signature">https://x/example-notes/example-notes-0.0.2-linux-x86_64.tar.gz.asc</value>
+      <value key="fs:provides">texts 1.0, people.persons 1.2</value>
+      <value key="fs:requires">store</value>
+      <value key="fs:recommends">comments</value>
+      <value key="fs:features">contacts, export</value>
+      <value key="fs:feature.contacts.provides">people.persons 1.0</value>
+      <value key="fs:feature.contacts.requires">people.persons 1.0</value>
+      <value key="fs:feature.contacts.name">Contacts</value>
+      <value key="fs:upstream">https://example.org/notes</value>
+      <value key="fs:upstream-signature">16A4 A3EE 563A EF51 FCF0 C55D ED7B 57C4 A190 4342</value>
+      <value key="fs:source-code">https://example.org/notes/src-0.0.2.tar.gz</value>
+      <value key="fs:maker">Example Makers</value>
+      <value key="fs:description-wiki">0192f3a0-7b1c-7a3e-8c4d-5e6f7a8b9c0d</value>
+      <value key="fs:description-wiki-lang">de</value>
+      <value key="fs:description-wiki-source-rev">3</value>
+    </custom>
+  </component>
+  <component type="service">
+    <id>example-server</id>
+    <name>Example.Server</name>
+    <summary>A server (kind `server`): the store shows it locked until such packages exist</summary>
+    <description><p>A server package.</p></description>
+    <url type="homepage">https://github.com/FreeSynergy/example-server</url>
+    <icon type="remote" fs-sha256="09c6d581fec61da89cd7db065b453cfef35b04394a317b853135a240e348d183">https://raw.githubusercontent.com/FreeSynergy/fs-catalog/main/examples/images/example-server-icon.png</icon>
+    <releases>
+      <release version="0.0.1" date="2026-11-12">
+        <artifacts>
+          <artifact type="binary" platform="x86_64-linux-gnu">
+            <location>https://x/example-server/example-server-0.0.1-linux-x86_64.tar.gz</location>
+            <checksum type="sha256">abababababababababababababababababababababababababababababababab</checksum>
+            <size type="download">123456</size>
+          </artifact>
+        </artifacts>
+      </release>
+    </releases>
+    <custom>
+      <value key="fs:kind">server</value>
+      <value key="fs:format">tar.gz</value>
+      <value key="fs:signature">https://x/example-server/example-server-0.0.1-linux-x86_64.tar.gz.asc</value>
+      <value key="fs:provides">identity.oidc 1.0, identity.accounts</value>
+    </custom>
+  </component>
+  <component type="icon-theme">
+    <id>example-icons</id>
+    <name>Example.Icons</name>
+    <summary>An icon set (kind `icon-theme`)</summary>
+    <description><p>An icon set.</p></description>
+    <url type="homepage">https://github.com/FreeSynergy/example-icons</url>
+    <icon type="remote" fs-sha256="f49055b337423e25f34530936052a21de3e663131dc6e0de50cb829f70cc7c25">https://raw.githubusercontent.com/FreeSynergy/fs-catalog/main/examples/images/example-icons-icon.png</icon>
+    <releases>
+      <release version="0.0.1" date="2026-11-12">
+        <artifacts>
+          <artifact type="binary" platform="x86_64-linux-gnu">
+            <location>https://x/example-icons/example-icons-0.0.1-linux-x86_64.tar.gz</location>
+            <checksum type="sha256">abababababababababababababababababababababababababababababababab</checksum>
+            <size type="download">123456</size>
+          </artifact>
+        </artifacts>
+      </release>
+    </releases>
+    <custom>
+      <value key="fs:kind">icon-theme</value>
+      <value key="fs:format">tar.gz</value>
+      <value key="fs:signature">https://x/example-icons/example-icons-0.0.1-linux-x86_64.tar.gz.asc</value>
+    </custom>
+  </component>
+</components>
