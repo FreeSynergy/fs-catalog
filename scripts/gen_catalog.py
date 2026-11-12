@@ -6,13 +6,16 @@ file is the `.asc` next to it. The catalog itself is signed by CI (see .github/w
 """
 import hashlib
 import importlib.util
+import ipaddress
 import json
 import os
 import re
+import socket
 import subprocess
 import sys
 import time
 import tomllib
+import urllib.parse
 import xml.etree.ElementTree as ET
 from xml.sax.saxutils import escape, quoteattr
 
@@ -59,12 +62,39 @@ def sums(release):
     return {line.split()[1].lstrip("*"): line.split()[0] for line in text.splitlines() if line.strip()}
 
 
-def fetch(url):
-    """Bytes of a public file (icon, picture). A failed download is `Skip` (try again next run), never a half entry."""
-    done = subprocess.run(["curl", "-fsSL", "--max-time", "60", "--max-filesize", str(10 * 1024 * 1024), url], capture_output=True)
+class Transient(Skip):
+    """A download failed (network, server): nothing is wrong with the data. Never stops bump or sign (see `main`)."""
+
+
+def _public_host(url):
+    """False when the host of `url` resolves to a loopback, private, link-local or otherwise internal address."""
+    host = urllib.parse.urlsplit(url).hostname or ""
+    try:
+        found = {a[4][0] for a in socket.getaddrinfo(host, 443, proto=socket.IPPROTO_TCP)}
+    except OSError:
+        return True  # cannot resolve now: curl fails the same way and that is reported as a transient failure
+    return all(ipaddress.ip_address(a.split("%")[0]).is_global for a in found)
+
+
+def fetch(url, limit=schema.SCREENSHOT_LIMIT):
+    """Bytes of a public file (icon, picture): https only (also after redirects), at most `limit` bytes, no internal hosts.
+    A failed download is `Transient` (try again next run), never a half entry; a file over the limit is an error."""
+    if not _public_host(url):
+        sys.exit(f"{url}: the host is a loopback or private address; only public https addresses are fetched")
+    done = subprocess.run(
+        ["curl", "-fsSL", "--proto", "=https", "--proto-redir", "=https", "--max-redirs", "3", "--max-time", "60", "--max-filesize", str(limit), url],
+        capture_output=True)
+    if done.returncode == 63:  # CURLE_FILESIZE_EXCEEDED
+        sys.exit(f"{url}: larger than {limit} bytes")
     if done.returncode != 0:
-        raise Skip(f"{url}: could not be downloaded")
+        raise Transient(f"{url}: could not be downloaded (curl exit {done.returncode})")
+    if len(done.stdout) > limit:
+        sys.exit(f"{url}: larger than {limit} bytes")
     return done.stdout
+
+
+class CapabilityListError(Exception):
+    """The capability list could not be read."""
 
 
 def capabilities():
@@ -80,11 +110,12 @@ def capabilities():
                 ["gh", "api", "-H", "Accept: application/vnd.github.raw", f"repos/FreeSynergy/fs-interfaces/contents/schema/capabilities.txt?ref={CTX['caps_ref']}"],
                 capture_output=True, text=True)
             if done.returncode != 0:
-                sys.exit(f"cannot read the capability list of fs-interfaces {CTX['caps_ref']}: {done.stderr.strip()}")
+                raise CapabilityListError(f"cannot read the capability list of fs-interfaces {CTX['caps_ref']}: {done.stderr.strip() or 'gh api failed'}")
             text = done.stdout
         CTX["caps"] = schema.parse_capabilities(text)
         if not CTX["caps"]:
-            sys.exit("the capability list is empty or not in the form `key | name | status | text`")
+            CTX["caps"] = None
+            raise CapabilityListError("the capability list is empty or not in the form `key | name | status | text`")
     return CTX["caps"]
 
 
@@ -92,7 +123,15 @@ def check(packages):
     """Validates every package, reports ALL findings at once, stops on errors. Warnings go out as workflow warnings."""
     issues = []
     for p in packages:
-        caps = capabilities() if schema.uses_capabilities(p) else None
+        caps = None
+        if schema.uses_capabilities(p):
+            try:
+                caps = capabilities()
+            except CapabilityListError as why:
+                # format 2 must check the names; for format 1 a failing read (no token, network) is a warning, never a stopped run
+                if CTX["schema"] >= 2:
+                    sys.exit(str(why))
+                print(f"::warning title=catalog: capability names not checked::{why}")
         issues += schema.validate(p, caps, CTX["schema"])
     for i in issues:
         if not i.error:
@@ -113,7 +152,8 @@ NATIVE = [
 
 
 def entry(p):
-    check([p])
+    if not CTX.get("checked"):  # main has already checked (and warned) for every package
+        check([p])
     release = gh(f"repos/{p['repo']}/releases/tags/{p['tag']}")
     if release.get("draft"):
         raise Skip(f"{p['repo']} {p['tag']} is still a draft; publish it first (drafts are not downloadable)")
@@ -134,7 +174,7 @@ def entry(p):
     # optional PNG icon: `icon = "https://..."` in packages.toml; its SHA-256 goes into the signed catalog
     icon_line = ""
     if p.get("icon"):
-        data = picture(p["id"], "icon", p["icon"], p.get("icon_sha256"))
+        data = picture(p["id"], "icon", p["icon"], p.get("icon_sha256"), icon=True)
         icon_line = f"\n    <icon type=\"remote\" fs-sha256=\"{hashlib.sha256(data).hexdigest()}\">{escape(p['icon'])}</icon>"
     shots = p.get("screenshot", [])
     hashes = [hashlib.sha256(picture(p["id"], f"screenshot[{i}]", s["url"], s.get("sha256"))).hexdigest() for i, s in enumerate(shots)]
@@ -195,11 +235,12 @@ def entry(p):
     return component
 
 
-def picture(pid, field, url, declared):
-    """The bytes of an icon or picture: must be a picture, and must match the hash given in packages.toml when there is one."""
-    data = fetch(url)
-    if not schema.image_ok(data):
-        sys.exit(f"{pid}: {field}: {url} is not a picture file (an error page?)")
+def picture(pid, field, url, declared, icon=False):
+    """The bytes of an icon or picture: an icon is a PNG of at most 1 MiB (SVG is refused, as in the store's icons.rs); a picture is
+    PNG, JPEG or WebP. Must match the hash given in packages.toml when there is one."""
+    data = fetch(url, schema.ICON_LIMIT if icon else schema.SCREENSHOT_LIMIT)
+    if not (schema.icon_ok if icon else schema.image_ok)(data):
+        sys.exit(f"{pid}: {field}: {url} is not {'a PNG icon (SVG is not accepted)' if icon else 'a PNG, JPEG or WebP picture'} (an error page?)")
     if declared and hashlib.sha256(data).hexdigest() != declared:
         sys.exit(f"{pid}: {field}: {url} does not match the given sha256 (the file changed)")
     return data
@@ -231,6 +272,7 @@ def main():
     if CTX["schema"] not in (1, 2):
         sys.exit(f"packages.toml: schema = {CTX['schema']} is not known (1 or 2)")
     check(packages)  # all findings at once, before any network use
+    CTX["checked"] = True
     if "--check" in sys.argv:
         print(f"{len(packages)} packages checked, schema {CTX['schema']}: no errors")
         return
@@ -238,6 +280,13 @@ def main():
     for p in packages:
         try:
             blocks.append(entry(p))
+        except Transient as why:
+            # A failed download must never stop bump or sign: keep what the last signed catalog said for this package.
+            old = previous(p["id"])
+            skipped += 1
+            if old:
+                blocks.append(old)
+            print(f"::warning title=catalog: {p['id']} download failed::{why}; " + ("kept the entry of the last signed catalog" if old else "no earlier entry, package left out this time"))
         except Skip as why:
             # A NEW tag that is not available yet (still a draft, files missing) is skipped. A tag the last signed catalog
             # already offered that has now vanished (release deleted or withdrawn) is an error: stay red, look at it.

@@ -14,3 +14,5 @@ jobs:
       - run: python3 -I -m unittest discover -s tests -v
       - run: python3 -I -m py_compile scripts/gen_catalog.py scripts/bump_catalog.py scripts/catalog_schema.py
       - run: python3 -I scripts/gen_catalog.py --check
+        env:
+          GH_TOKEN: ${{ github.token }}
