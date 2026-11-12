@@ -53,6 +53,16 @@ asset = "fs-files-{version}-linux-x86_64.tar.gz"
 kind = "program"
 
 [[package]]
+id = "fs-wiki"
+name = "FreeSynergy.Wiki"
+summary = "Notes that belong together"
+description = "Notes that belong together: pages with blocks, a tree of pages, each page in German and English as one page with a language switch, and read-only access to the project documentation. Your pages stay in your own data folder."
+repo = "FreeSynergy/fs-wiki"
+tag = "v0.0.7"
+asset = "fs-wiki-{version}-linux-x86_64.tar.gz"
+kind = "program"
+
+[[package]]
 id = "fs-maps"
 name = "FreeSynergy.Maps"
 summary = "Places and maps"
