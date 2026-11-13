@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<components version="1.0" origin="freesynergy" fs-serial="1794578718" fs-expires="1797602718">
+<components version="1.0" origin="freesynergy" fs-serial="1794579476" fs-expires="1797603476">
   <component type="desktop-application">
     <id>fs-store</id>
     <name>FreeSynergy.Store</name>
@@ -50,32 +50,32 @@
     <description><p>Plan what has to be done: lists, status and Kanban views, due dates, relations between tasks, and import and export as iCalendar. Your tasks stay in your own data folder.</p></description>
     <url type="homepage">https://github.com/FreeSynergy/fs-tasks</url>
     <releases>
-      <release version="0.0.7" date="2026-11-13">
+      <release version="0.0.8" date="2026-11-13">
         <artifacts>
           <artifact type="binary" platform="x86_64-linux-gnu">
-            <location>https://github.com/FreeSynergy/fs-tasks/releases/download/v0.0.7/fs-tasks-0.0.7-linux-x86_64.tar.gz</location>
-            <checksum type="sha256">b8fc1b1d8bfda78f80a310d9bfe2c6cfde391c1281aea82207a0237ed45cb439</checksum>
-            <size type="download">19513682</size>
+            <location>https://github.com/FreeSynergy/fs-tasks/releases/download/v0.0.8/fs-tasks-0.0.8-linux-x86_64.tar.gz</location>
+            <checksum type="sha256">9a1d4e2403e5b6874de52f305ced1fb629a1f0ae30a68f943ee1c8cc29a59794</checksum>
+            <size type="download">20128229</size>
           </artifact>
-          <artifact type="binary" platform="aarch64-linux-gnu" fs-format="rpm" fs-signature="https://github.com/FreeSynergy/fs-tasks/releases/download/v0.0.7/fs-tasks-0.0.7-1.aarch64.rpm.asc">
-            <location>https://github.com/FreeSynergy/fs-tasks/releases/download/v0.0.7/fs-tasks-0.0.7-1.aarch64.rpm</location>
-            <checksum type="sha256">740cc448173b1591406808e0a9d56e39add673d3f361290124e5d23834ff2981</checksum>
-            <size type="download">13173460</size>
+          <artifact type="binary" platform="aarch64-linux-gnu" fs-format="rpm" fs-signature="https://github.com/FreeSynergy/fs-tasks/releases/download/v0.0.8/fs-tasks-0.0.8-1.aarch64.rpm.asc">
+            <location>https://github.com/FreeSynergy/fs-tasks/releases/download/v0.0.8/fs-tasks-0.0.8-1.aarch64.rpm</location>
+            <checksum type="sha256">2b0e510121dcb92ca03527d6c59e5c54fe3290dd8bd56fddd3a50715c262a1fa</checksum>
+            <size type="download">13502437</size>
           </artifact>
-          <artifact type="binary" platform="x86_64-linux-gnu" fs-format="rpm" fs-signature="https://github.com/FreeSynergy/fs-tasks/releases/download/v0.0.7/fs-tasks-0.0.7-1.x86_64.rpm.asc">
-            <location>https://github.com/FreeSynergy/fs-tasks/releases/download/v0.0.7/fs-tasks-0.0.7-1.x86_64.rpm</location>
-            <checksum type="sha256">f070659bf8a77a64540f6eedb3b9b75b1a208af5a0e9436632f694c3dcf407b8</checksum>
-            <size type="download">13880301</size>
+          <artifact type="binary" platform="x86_64-linux-gnu" fs-format="rpm" fs-signature="https://github.com/FreeSynergy/fs-tasks/releases/download/v0.0.8/fs-tasks-0.0.8-1.x86_64.rpm.asc">
+            <location>https://github.com/FreeSynergy/fs-tasks/releases/download/v0.0.8/fs-tasks-0.0.8-1.x86_64.rpm</location>
+            <checksum type="sha256">53b13ced42d239b2f5176c28fabfcd98fdf3c60c51461b06905145032a4c8d55</checksum>
+            <size type="download">14222432</size>
           </artifact>
-          <artifact type="binary" platform="x86_64-linux-gnu" fs-format="deb" fs-signature="https://github.com/FreeSynergy/fs-tasks/releases/download/v0.0.7/fs-tasks_0.0.7-1_amd64.deb.asc">
-            <location>https://github.com/FreeSynergy/fs-tasks/releases/download/v0.0.7/fs-tasks_0.0.7-1_amd64.deb</location>
-            <checksum type="sha256">90b0da8e6b6fd0b486482a0f1023557f9fe0da2611c2993dccb3b9506b13a087</checksum>
-            <size type="download">12860608</size>
+          <artifact type="binary" platform="x86_64-linux-gnu" fs-format="deb" fs-signature="https://github.com/FreeSynergy/fs-tasks/releases/download/v0.0.8/fs-tasks_0.0.8-1_amd64.deb.asc">
+            <location>https://github.com/FreeSynergy/fs-tasks/releases/download/v0.0.8/fs-tasks_0.0.8-1_amd64.deb</location>
+            <checksum type="sha256">5cb0d48cb4ccfceb247aed7d4f3a17abdc607dc0fdf6dd8ce057532c170247e4</checksum>
+            <size type="download">13213524</size>
           </artifact>
-          <artifact type="binary" platform="aarch64-linux-gnu" fs-format="deb" fs-signature="https://github.com/FreeSynergy/fs-tasks/releases/download/v0.0.7/fs-tasks_0.0.7-1_arm64.deb.asc">
-            <location>https://github.com/FreeSynergy/fs-tasks/releases/download/v0.0.7/fs-tasks_0.0.7-1_arm64.deb</location>
-            <checksum type="sha256">059dc7fd69bc3a8432191e6702537e3685a944788b3274847e9906d867b40780</checksum>
-            <size type="download">11372964</size>
+          <artifact type="binary" platform="aarch64-linux-gnu" fs-format="deb" fs-signature="https://github.com/FreeSynergy/fs-tasks/releases/download/v0.0.8/fs-tasks_0.0.8-1_arm64.deb.asc">
+            <location>https://github.com/FreeSynergy/fs-tasks/releases/download/v0.0.8/fs-tasks_0.0.8-1_arm64.deb</location>
+            <checksum type="sha256">dd3666146de39c806663ee5cf60ebde1a03164d8571edd4f764ee19cd58994d6</checksum>
+            <size type="download">11646248</size>
           </artifact>
         </artifacts>
       </release>
@@ -83,7 +83,7 @@
     <custom>
       <value key="fs:kind">program</value>
       <value key="fs:format">tar.gz</value>
-      <value key="fs:signature">https://github.com/FreeSynergy/fs-tasks/releases/download/v0.0.7/fs-tasks-0.0.7-linux-x86_64.tar.gz.asc</value>
+      <value key="fs:signature">https://github.com/FreeSynergy/fs-tasks/releases/download/v0.0.8/fs-tasks-0.0.8-linux-x86_64.tar.gz.asc</value>
     </custom>
   </component>
   <component type="desktop-application">
