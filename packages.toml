@@ -18,7 +18,7 @@ name = "FreeSynergy.Tasks"
 summary = "Tasks and Kanban"
 description = "Plan what has to be done: lists, status and Kanban views, due dates, relations between tasks, and import and export as iCalendar. Your tasks stay in your own data folder."
 repo = "FreeSynergy/fs-tasks"
-tag = "v0.0.6"
+tag = "v0.0.7"
 asset = "fs-tasks-{version}-linux-x86_64.tar.gz"
 kind = "program"
 
