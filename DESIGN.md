@@ -11,6 +11,11 @@
    with `gh workflow run sign.yml` (a push with GITHUB_TOKEN starts no workflow; workflow_dispatch is the exception).
 3. `sign.yml` runs `scripts/gen_catalog.py`, signs `catalog.xml` and commits it. It also runs Monday and Thursday so the
    catalog (valid 35 days) is renewed without anyone; a red run opens the issue "catalog signing failed".
+4. The job `verify` of the SAME `sign.yml` run (`needs: sign`, no extra token or right: a push with GITHUB_TOKEN starts no
+   other workflow, so the check cannot be a separate one) runs `scripts/verify-catalog.sh`: fresh clone, `catalog.xml.asc` against
+   `release-signing-key.asc` (pinned primary fingerprint), every tag of `packages.toml` present in `catalog.xml`. Red = the issue
+   "catalog signing failed"; the next green run closes it. `test.yml` runs the same script by hand and daily.
+   Chain: bump -> sign -> verify. (Planned: red notices via the reusable `_notify-red.yml` of fs-release.)
 
 Properties: no secret and nothing cross-repo (pull, only this repo's own GITHUB_TOKEN with `contents: write` and `actions: write`);
 delay up to 15 minutes plus the sign run; never lowers a tag; unchanged state = no commit and no sign run, and `bump` never

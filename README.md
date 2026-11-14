@@ -9,3 +9,5 @@ OpenPGP signature (`catalog.xml.asc`, made by CI with the project signing subkey
 - Status: pre-release packages only.
 
 Licence: MIT OR Apache-2.0.
+
+CI chain: `bump` (new release found) -> `sign` (generate, sign, commit) -> `verify` (fresh clone, signature and versions checked, `scripts/verify-catalog.sh`); see DESIGN.md.

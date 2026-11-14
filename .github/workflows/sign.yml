@@ -1,8 +1,8 @@
 # Generates catalog.xml from packages.toml and the public releases, signs it with the project's signing subkey and
 # commits catalog.xml and catalog.xml.asc together (one commit: clients never see a catalog without its signature).
 # Runs when the package list changes, every Monday and Thursday (the catalog is valid for 35 days, so about ten runs may
-# fail before it lapses), and by hand. A failed run opens (or updates) the issue "catalog signing failed"; the next green
-# run closes it again. No secret is ever printed.
+# fail before it lapses), and by hand. Then the job `verify` checks the published catalog (scripts/verify-catalog.sh). A failed run (either job) opens (or
+# updates) the issue "catalog signing failed"; the next green run closes it again. No secret is ever printed.
 # Needs the secrets GPG_PRIVATE_KEY and GPG_PASSPHRASE (scripts/set-signing-secrets.sh in fs-release).
 name: sign
 on:
@@ -49,6 +49,34 @@ jobs:
           done
           echo "::error::could not push the signed catalog after 3 attempts"
           exit 1
+      - name: Make a failed run visible
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          echo "::error title=catalog signing failed::catalog.xml was NOT renewed; see $url"
+          body="The sign workflow failed (${GITHUB_EVENT_NAME}): ${url}
+          The published catalog.xml stays as it was and expires on its fs-expires date. Look at the failed step; common causes are a missing GPG secret, a package without a published release, or a push conflict."
+          n=$(gh issue list --state open --search '"catalog signing failed" in:title' --json number --jq '.[0].number // empty')
+          if [ -n "$n" ]; then gh issue comment "$n" --body "Failed again: $url"; else gh issue create --title "catalog signing failed" --body "$body"; fi
+  # Same run, no extra token: a push with GITHUB_TOKEN starts no other workflow, so the check of the PUBLISHED catalog
+  # (fresh clone, signature against the project key, every tag present) runs here, after the push, as a second job.
+  # Red = the "catalog signing failed" issue; the green run closes it.
+  # TODO(fs-release, separate order): once FreeSynergy/fs-release/.github/workflows/_notify-red.yml exists, call it from
+  # both jobs with `uses: ...@<tag or SHA>` (issue "rot: sign fs-catalog", label rot, duplicate guard, closes on green).
+  verify:
+    needs: sign
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Verify the published catalog
+        run: scripts/verify-catalog.sh
       - name: Close the failure issue
         if: success()
         env:
@@ -63,8 +91,8 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
-          echo "::error title=catalog signing failed::catalog.xml was NOT renewed; see $url"
-          body="The sign workflow failed (${GITHUB_EVENT_NAME}): ${url}
+          echo "::error title=catalog signing failed::the published catalog failed its check; see $url"
+          body="The sign workflow (verify job) failed (${GITHUB_EVENT_NAME}): ${url}
           The published catalog.xml stays as it was and expires on its fs-expires date. Look at the failed step; common causes are a missing GPG secret, a package without a published release, or a push conflict."
           n=$(gh issue list --state open --search '"catalog signing failed" in:title' --json number --jq '.[0].number // empty')
           if [ -n "$n" ]; then gh issue comment "$n" --body "Failed again: $url"; else gh issue create --title "catalog signing failed" --body "$body"; fi
