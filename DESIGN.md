@@ -15,7 +15,7 @@
    other workflow, so the check cannot be a separate one) runs `scripts/verify-catalog.sh`: fresh clone, `catalog.xml.asc` against
    `release-signing-key.asc` (pinned primary fingerprint), every tag of `packages.toml` present in `catalog.xml`. Red = the issue
    "catalog signing failed"; the next green run closes it. `test.yml` runs the same script by hand and daily.
-   Chain: bump -> sign -> verify. (Planned: red notices via the reusable `_notify-red.yml` of fs-release.)
+   Chain: bump -> sign -> verify. A tag whose release is explicitly a draft is skipped by `gen_catalog.py` and listed in `catalog.drafts` (committed with the catalog); `verify` only notices those, every other missing tag is red. If `bump` changes `packages.toml` while `sign` runs, `verify` is briefly red; the next sign run heals it. (Planned: red notices via the reusable `_notify-red.yml` of fs-release.)
 
 Properties: no secret and nothing cross-repo (pull, only this repo's own GITHUB_TOKEN with `contents: write` and `actions: write`);
 delay up to 15 minutes plus the sign run; never lowers a tag; unchanged state = no commit and no sign run, and `bump` never

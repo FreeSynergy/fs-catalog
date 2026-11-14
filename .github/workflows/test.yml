@@ -15,7 +15,7 @@ jobs:
         with:
           persist-credentials: false
       - run: python3 -I -m unittest discover -s tests -v
-      - run: python3 -I -m py_compile scripts/gen_catalog.py scripts/bump_catalog.py scripts/catalog_schema.py scripts/schema_base.py scripts/schema_rules.py scripts/schema_rules_content.py scripts/schema_xml.py scripts/catalog_net.py scripts/catalog_check.py
+      - run: python3 -I -m py_compile scripts/gen_catalog.py scripts/bump_catalog.py scripts/catalog_schema.py scripts/schema_base.py scripts/schema_rules.py scripts/schema_rules_content.py scripts/schema_xml.py scripts/catalog_net.py scripts/catalog_check.py scripts/verify_tags.py
       - run: python3 -I scripts/gen_catalog.py --check
         env:
           GH_TOKEN: ${{ github.token }}
@@ -23,8 +23,22 @@ jobs:
   verify:
     if: github.event_name == 'workflow_dispatch' || github.event_name == 'schedule'
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
       - run: scripts/verify-catalog.sh
+      - name: Make a failed run visible
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          echo "::error title=catalog signing failed::the published catalog failed its check; see $url"
+          body="The catalog check of the test workflow failed (${GITHUB_EVENT_NAME}): ${url}
+          The published catalog.xml is not valid for clients. Look at the failed step; the next green sign run closes this issue."
+          n=$(gh issue list --state open --search '"catalog signing failed" in:title' --json number --jq '.[0].number // empty')
+          if [ -n "$n" ]; then gh issue comment "$n" --body "Failed again: $url"; else gh issue create --title "catalog signing failed" --body "$body"; fi

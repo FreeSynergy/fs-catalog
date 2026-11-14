@@ -12,6 +12,10 @@ class Skip(Exception):
     """This package cannot be listed right now (draft, missing release or file). The run goes on without it."""
 
 
+class Draft(Skip):
+    """The GitHub release is EXPLICITLY a draft (flag `draft`). Listed in `catalog.drafts`, so `verify-catalog.sh` tolerates the missing tag."""
+
+
 class Transient(Skip):
     """A download failed (network, server): nothing is wrong with the data. Never stops bump or sign (see `gen_catalog.main`)."""
 

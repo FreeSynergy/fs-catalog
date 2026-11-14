@@ -40,7 +40,7 @@ jobs:
         run: |
           git config user.name "FreeSynergy Release"
           git config user.email "support@freesynergy.net"
-          git add catalog.xml catalog.xml.asc
+          git add catalog.xml catalog.xml.asc catalog.drafts
           git commit -m "chore: refresh and sign catalog.xml"
           # bump may have pushed packages.toml meanwhile: rebase onto it and try again; still failing = red run
           for i in 1 2 3; do

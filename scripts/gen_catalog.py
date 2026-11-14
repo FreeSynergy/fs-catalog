@@ -31,7 +31,7 @@ def _load(*names):
 
 schema, net, checks = _load("catalog_schema", "catalog_net", "catalog_check")
 CTX, check, CapabilityListError, capabilities = checks.CTX, checks.check, checks.CapabilityListError, checks.capabilities
-Skip, Transient, fetch = net.Skip, net.Transient, net.fetch
+Skip, Draft, Transient, fetch = net.Skip, net.Draft, net.Transient, net.fetch
 
 # The catalog is valid for this long; CI renews it twice a week (sign.yml), so several runs may fail before it lapses.
 VALID_DAYS = 35
@@ -69,7 +69,7 @@ def entry(p):
         check([p])
     release = gh(f"repos/{p['repo']}/releases/tags/{p['tag']}")
     if release.get("draft"):
-        raise Skip(f"{p['repo']} {p['tag']} is still a draft; publish it first (drafts are not downloadable)")
+        raise Draft(f"{p['repo']} {p['tag']} is still a draft; publish it first (drafts are not downloadable)")
     version = p["tag"].lstrip("v")
     wanted = p["asset"].format(version=version)
     asset = next((a for a in release["assets"] if a["name"] == wanted), None)
@@ -186,7 +186,7 @@ def main():
     if "--check" in sys.argv:
         print(f"{len(packages)} packages checked, schema {CTX['schema']}: no errors")
         return
-    blocks, skipped = [], 0
+    blocks, skipped, drafts = [], 0, []
     for p in packages:
         try:
             blocks.append(entry(p))
@@ -204,6 +204,8 @@ def main():
             if old and f"<release version={quoteattr(p['tag'].lstrip('v'))}" in old:
                 sys.exit(f"{p['id']} {p['tag']} was in the signed catalog but is gone now: {why}")
             skipped += 1
+            if isinstance(why, Draft):
+                drafts.append(f"{p['id']} {p['tag']}")
             # Keep what the last signed catalog said (an older version is better than a vanished program), and say so.
             if old:
                 blocks.append(old)
@@ -213,6 +215,9 @@ def main():
     body = "\n".join(blocks)
     if skipped:
         print(f"{skipped} of {len(packages)} packages skipped (see warnings)")
+    # Tags skipped ONLY because their release is a draft: scripts/verify-catalog.sh tolerates exactly these (a notice, not red).
+    with open(f"{HERE}/catalog.drafts", "w") as f:
+        f.write("".join(d + "\n" for d in drafts))
     # Freshness for the store: the serial only goes up (rollback), the catalog goes stale after VALID_DAYS (freeze).
     # CI regenerates and signs twice a week, so a mirror that keeps serving an old copy is refused after five weeks.
     serial = int(time.time())
